@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mkdocs-freetext"
+version = "1.0.0"
+description = "A comprehensive MkDocs plugin for adding interactive free-text questions and assessments"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Drew Kearsey", email = "drew.kearsey@kubrickgroup.com"}
+]
+maintainers = [
+    {name = "Drew Kearsey", email = "drew.kearsey@kubrickgroup.com"}
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Documentation",
+    "Topic :: Education",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Framework :: MkDocs",
+]
+keywords = [
+    "mkdocs", 
+    "plugin", 
+    "freetext", 
+    "questions", 
+    "assessment", 
+    "education",
+    "material",
+    "interactive",
+    "learning"
+]
+dependencies = [
+    "mkdocs>=1.4.0",
+    "markdown>=3.3.0",
+]
+requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/mkdocs-freetext"
+Documentation = "https://github.com/yourusername/mkdocs-freetext"
+Repository = "https://github.com/yourusername/mkdocs-freetext"
+"Bug Tracker" = "https://github.com/yourusername/mkdocs-freetext/issues"
+
+[project.entry-points."mkdocs.plugins"]
+freetext = "mkdocs_freetext.plugin:FreetextPlugin"
