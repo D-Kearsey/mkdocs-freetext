@@ -62,7 +62,6 @@ plugins:
 
 ## 📖 Documentation
 
-- **[Installation Guide](docs/installation.md)** - Detailed setup instructions
 - **[Configuration Reference](docs/configuration.md)** - All available options
 - **[Question Syntax](docs/question-syntax.md)** - How to create questions
 - **[Assessment Syntax](docs/assessment-syntax.md)** - How to create assessments
@@ -131,10 +130,6 @@ This plugin is designed to work seamlessly with the Material for MkDocs theme:
     placeholder: Identify and explain potential bottlenecks...
 ```
 
-## 🤝 Contributing
-
-Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -153,7 +148,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Rich Content**: Support for diagrams, code, images, and complex markdown
 - **Developer Friendly**: Clean API, extensive documentation, and active maintenance
 - **Production Ready**: Used in educational institutions and corporate training
-
----
-
-*Made with ❤️ for the MkDocs community*
