@@ -1,0 +1,14 @@
+- assessment landing page
+  - off by default but can be configured at the assessment level
+  - assessment questions initially hidden with assessment description detailing pass mark, time to complete, materials the person completing can use
+- button to start exam then questions appear as normal in instruction box is minimised
+- Timer for assessments
+  - countdown timer displayed during assessment
+  - can be configured to different times
+  - warning pops up upon countdown timer getting to 10% of time remaining and again at 5% telling user how much time they have left to finish 
+- rich content answers with images, diagrams, and code blocks
+  - with linting over code responces
+- Intergrate MCQ plugin
+  - MCQ questions can be added to assessments
+- add additional question types
+  - 

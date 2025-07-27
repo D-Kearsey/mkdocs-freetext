@@ -12,16 +12,16 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="mkdocs-freetext",
-    version="0.1.0",
-    author="Your Name",
-    author_email="your.email@example.com",
-    description="A MkDocs plugin for adding interactive free text questions to documentation",
+    version="1.0.1",
+    author="Drew Kearsey",
+    author_email="drew.kearsey@kubrickgroup.com",
+    description="A comprehensive MkDocs plugin for adding interactive free-text questions and assessments",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/your-username/mkdocs-freetext",
+    url="https://github.com/D-Kearsey/mkdocs-freetext",
     project_urls={
-        "Bug Tracker": "https://github.com/your-username/mkdocs-freetext/issues",
-        "Documentation": "https://your-username.github.io/mkdocs-freetext/",
+        "Bug Tracker": "https://github.com/D-Kearsey/mkdocs-freetext/issues",
+        "Documentation": "https://github.com/D-Kearsey/mkdocs-freetext",
     },
     classifiers=[
         "Development Status :: 3 - Alpha",

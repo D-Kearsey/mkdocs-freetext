@@ -1,0 +1,5 @@
+# Ignore all test output files - these are temporary and regenerated
+*.txt
+*.log
+*.html
+*.json

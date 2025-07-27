@@ -1,0 +1,234 @@
+Metadata-Version: 2.4
+Name: mkdocs-freetext
+Version: 1.0.3
+Summary: A comprehensive MkDocs plugin for adding interactive free-text questions and assessments
+Home-page: https://github.com/D-Kearsey/mkdocs-freetext
+Author: Drew Kearsey
+Author-email: Drew Kearsey <drew.kearsey@kubrickgroup.com>
+Maintainer-email: Drew Kearsey <drew.kearsey@kubrickgroup.com>
+License: MIT
+Project-URL: Homepage, https://github.com/D-Kearsey/mkdocs-freetext
+Project-URL: Documentation, https://github.com/D-Kearsey/mkdocs-freetext
+Project-URL: Repository, https://github.com/D-Kearsey/mkdocs-freetext
+Project-URL: Bug Tracker, https://github.com/D-Kearsey/mkdocs-freetext/issues
+Keywords: mkdocs,plugin,freetext,questions,assessment,education,material,interactive,learning
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Documentation
+Classifier: Topic :: Education
+Classifier: Topic :: Text Processing :: Markup :: Markdown
+Classifier: Framework :: MkDocs
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: mkdocs>=1.4.0
+Requires-Dist: markdown>=3.3.0
+Dynamic: author
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-python
+
+# MkDocs Free-Text Questions Plugin
+
+A comprehensive MkDocs plugin for adding interactive free-text input questions and assessments to your documentation. Perfect for educational content, tutorials, and training materials.
+
+## ✨ Features
+
+- **Interactive Questions**: Add free-text input questions directly to your documentation
+- **Multi-Question Assessments**: Create comprehensive assessments with multiple questions
+- **Rich Content Support**: Questions support Mermaid diagrams, code blocks, images, and markdown
+- **Material Theme Integration**: Seamlessly integrates with MkDocs Material theme, including automatic dark/light mode support
+- **Persistent Storage**: Auto-saves user answers in browser localStorage
+- **Flexible Configuration**: Customize appearance, behavior, and validation
+- **Question Shuffling**: Optional randomization of assessment question order
+- **Character Counting**: Optional character counter for text inputs
+- **Sample Answers**: Show/hide sample answers for learning reinforcement
+- **Clean Separation**: Use `---` separator to cleanly separate question content from configuration
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+pip install mkdocs-freetext
+```
+
+### Basic Configuration
+
+Add the plugin to your `mkdocs.yml`:
+
+```yaml
+plugins:
+  - freetext
+```
+
+### Simple Question Example
+
+```markdown
+!!! freetext
+    What is the capital of France?
+    
+    ---
+    marks: 2
+    placeholder: Enter your answer here...
+    show_answer: true
+    answer: Paris is the capital of France.
+```
+
+### Rich Content Question Example
+
+```markdown
+!!! freetext
+    Analyze this code and explain what it does:
+    
+    ```python
+    def fibonacci(n):
+        if n <= 1:
+            return n
+        return fibonacci(n-1) + fibonacci(n-2)
+    ```
+    
+    What is the time complexity of this algorithm?
+    
+    ---
+    marks: 10
+    type: long
+    rows: 6
+    placeholder: Explain the algorithm and its complexity...
+```
+
+### Question with Images and Diagrams
+
+```markdown
+!!! freetext
+    Study the system architecture below:
+    
+    ![System Architecture](images/architecture.png)
+    
+    ```mermaid
+    graph TD
+        A[Client] --> B[Load Balancer]
+        B --> C[Web Server 1]
+        B --> D[Web Server 2]
+        C --> E[Database]
+        D --> E
+    ```
+    
+    How would you scale this system to handle 10x more traffic?
+    
+    ---
+    marks: 15
+    type: long
+    rows: 8
+```
+
+### Assessment Example
+
+```markdown
+!!! freetext-assessment
+    title: Python Basics Assessment
+    shuffle: true
+    
+    question: What is a variable in Python?
+    marks: 3
+    placeholder: Describe what a variable is...
+    
+    ---
+    
+    question: Explain the difference between a list and a tuple.
+    marks: 5
+    placeholder: Compare lists and tuples...
+```
+
+## 📖 Documentation
+
+Visit our **[comprehensive documentation](https://d-kearsey.github.io/mkdocs-freetext/)** with live interactive demos, complete installation guide, and examples you can copy-paste.
+
+## 🎨 Material Theme Integration
+
+This plugin is designed to work seamlessly with the Material for MkDocs theme:
+
+- Automatic light/dark mode support using Material CSS variables
+- Consistent styling with Material design principles
+- Responsive design that works on all devices
+- Admonition-based syntax that integrates naturally with Material
+
+## 🔧 Configuration Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `question_class` | string | `freetext-question` | CSS class for question containers |
+| `assessment_class` | string | `freetext-assessment` | CSS class for assessment containers |
+| `enable_css` | boolean | `true` | Enable built-in CSS styling |
+| `shuffle_questions` | boolean | `false` | Shuffle question order in assessments |
+| `show_character_count` | boolean | `true` | Show character counter on text inputs |
+
+## 🌟 Examples
+
+### Basic Question with Rich Content
+
+```markdown
+!!! freetext
+    question: Analyze the following Python code and explain what it does:
+    
+    ```python
+    def fibonacci(n):
+        if n <= 1:
+            return n
+        return fibonacci(n-1) + fibonacci(n-2)
+    ```
+    
+    What is the time complexity of this implementation?
+    
+    marks: 5
+    placeholder: Explain the code and analyze its complexity...
+```
+
+### Assessment with Mermaid Diagram
+
+```markdown
+!!! freetext-assessment
+    title: System Design Assessment
+    
+    question: Based on this system architecture, identify potential bottlenecks:
+    
+    ```mermaid
+    graph TD
+        A[User] --> B[Load Balancer]
+        B --> C[Web Server 1]
+        B --> D[Web Server 2]
+        C --> E[Database]
+        D --> E
+    ```
+    
+    marks: 10
+    placeholder: Identify and explain potential bottlenecks...
+```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- [PyPI Package](https://pypi.org/project/mkdocs-freetext/) (Available after publishing)
+- [📖 Documentation & Live Demo](https://d-kearsey.github.io/mkdocs-freetext/)
+- [GitHub Repository](https://github.com/D-Kearsey/mkdocs-freetext)
+- [Issue Tracker](https://github.com/D-Kearsey/mkdocs-freetext/issues)
+
+## 🏆 Why Choose MkDocs Free-Text?
+
+- **Educational Focus**: Built specifically for learning and assessment
+- **Modern Design**: Beautiful, responsive interface that works everywhere
+- **Rich Content**: Support for diagrams, code, images, and complex markdown
+- **Developer Friendly**: Clean API, extensive documentation, and active maintenance
+- **Production Ready**: Used in educational institutions and corporate training

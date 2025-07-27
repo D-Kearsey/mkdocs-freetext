@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mkdocs-freetext"
-version = "1.0.0"
+version = "1.0.4"
 description = "A comprehensive MkDocs plugin for adding interactive free-text questions and assessments"
 readme = "README.md"
 license = {text = "MIT"}
@@ -49,10 +49,10 @@ dependencies = [
 requires-python = ">=3.8"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/mkdocs-freetext"
-Documentation = "https://github.com/yourusername/mkdocs-freetext"
-Repository = "https://github.com/yourusername/mkdocs-freetext"
-"Bug Tracker" = "https://github.com/yourusername/mkdocs-freetext/issues"
+Homepage = "https://github.com/D-Kearsey/mkdocs-freetext"
+Documentation = "https://github.com/D-Kearsey/mkdocs-freetext"
+Repository = "https://github.com/D-Kearsey/mkdocs-freetext"
+"Bug Tracker" = "https://github.com/D-Kearsey/mkdocs-freetext/issues"
 
 [project.entry-points."mkdocs.plugins"]
 freetext = "mkdocs_freetext.plugin:FreetextPlugin"

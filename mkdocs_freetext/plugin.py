@@ -30,14 +30,31 @@ class FreetextPlugin(BasePlugin):
         ('dark_mode_support', config_options.Type(bool, default=True)),
         ('shuffle_questions', config_options.Type(bool, default=False)),
         ('show_character_count', config_options.Type(bool, default=True)),
+        ('enable_auto_save', config_options.Type(bool, default=True)),
+        ('default_answer_rows', config_options.Type(int, default=3)),
+        ('default_long_answer_rows', config_options.Type(int, default=6)),
+        ('default_placeholder', config_options.Type(str, default='Enter your answer...')),
+        ('default_marks', config_options.Type(int, default=0)),
+        ('default_show_answer', config_options.Type(bool, default=True)),
+        ('default_question_type', config_options.Type(str, default='short')),
+        ('debug', config_options.Type(bool, default=False)),
     )
 
     def __init__(self):
         super().__init__()
         self.page_questions = {}  # Track questions per page
+        self.page_javascript = {}  # Track JavaScript per page for consolidation
+        self._debug_enabled = False  # Will be set in on_config
+
+    def _debug(self, message):
+        """Print debug message only if debug is enabled"""
+        if self._debug_enabled:
+            print(f"DEBUG: {message}")
 
     def on_config(self, config):
         """Called once after config is loaded"""
+        self._debug_enabled = self.config.get('debug', False)
+        self._debug("FreetextPlugin initialized with debug enabled!")
         return config
 
     def _process_markdown_content(self, content):
@@ -50,92 +67,465 @@ class FreetextPlugin(BasePlugin):
     def on_page_content(self, html, page, config, files, **kwargs):
         """
         Process HTML content to convert freetext question and assessment syntax.
-        This hook runs after markdown processing, so rich content will already be rendered.
+        This hook runs after markdown processing, so Mermaid diagrams will already be rendered.
         """
         # Initialize questions found for this page
         self.current_page_has_questions = False
+        self.current_page_javascript = []  # Collect all JavaScript for this page
+        self.current_page_dom_ready = []   # Collect all DOM ready code for this page
         
-        # Process freetext admonition blocks
+        # Debug: Print the input HTML
+        self._debug(f"Processing page: {page.file.src_path}")
+        self._debug(f"Input HTML length: {len(html)}")
+        
+        # Save original HTML for comparison
+        original_html = html
+        
+        # Look for freetext admonitions in the HTML
+        import re
+        freetext_matches = re.findall(r'<div class="admonition freetext[^"]*"[^>]*>', html)
+        self._debug(f"Found {len(freetext_matches)} freetext admonition(s):")
+        for i, match in enumerate(freetext_matches):
+            self._debug(f"  {i+1}. {match}")
+        
+        # Process freetext assessment blocks FIRST (before individual questions)
+        html_before = html
+        html = self._process_assessment_blocks_html(html)
+        
+        # Process individual freetext question blocks AFTER assessments
         html = self._process_freetext_blocks_html(html)
         
-        # Process freetext assessment blocks
-        html = self._process_assessment_blocks_html(html)
+        # Debug: Check if anything changed and write debug files
+        if html != html_before:
+            print(f"HTML was modified! New length: {len(html)}")
+            
+            # Write debug files to see what changed
+            debug_dir = "C:/Users/DrewKearsey/OneDrive - Kubrick Group/Training/Local LXP Dev/free_text_questions_plugin/debug"
+            import os
+            os.makedirs(debug_dir, exist_ok=True)
+            
+            page_name = page.file.src_path.replace('.md', '').replace('/', '_')
+            
+            with open(f"{debug_dir}/{page_name}_before.html", "w", encoding="utf-8") as f:
+                f.write(html_before)
+            
+            with open(f"{debug_dir}/{page_name}_after.html", "w", encoding="utf-8") as f:
+                f.write(html)
+                
+            print(f"Debug files written to {debug_dir}")
+        else:
+            print("HTML was NOT modified")
         
         # Store result for this page
         self.page_questions[page.file.src_path] = self.current_page_has_questions
         
+        # Store JavaScript data for use in on_post_page
+        if hasattr(self, 'current_page_javascript') and hasattr(self, 'current_page_dom_ready'):
+            # Create a nested dictionary structure to store page-specific JS data
+            if not hasattr(self, 'page_javascript'):
+                self.page_javascript = {}
+            self.page_javascript[page.file.src_path] = {
+                'functions': self.current_page_javascript[:],  # Make a copy
+                'dom_ready': self.current_page_dom_ready[:]   # Make a copy
+            }
+            print(f"Stored JavaScript data for {page.file.src_path}: {len(self.current_page_javascript)} functions, {len(self.current_page_dom_ready)} DOM ready blocks")
+        
         return html
+        
+    def _consolidate_dom_ready_events(self, javascript_code):
+        """Consolidate multiple DOMContentLoaded events into a single one."""
+        import re
+        
+        # Extract all function definitions (not wrapped in DOMContentLoaded)
+        functions = []
+        dom_ready_content = []
+        
+        # Split by DOMContentLoaded events and extract the content
+        parts = javascript_code.split("document.addEventListener('DOMContentLoaded', function() {")
+        
+        # First part contains function definitions
+        if parts[0].strip():
+            functions.append(parts[0].strip())
+        
+        # Extract content from each DOMContentLoaded block
+        for i in range(1, len(parts)):
+            part = parts[i]
+            # Find the closing of the DOMContentLoaded function
+            # Count braces to find the end
+            brace_count = 1
+            pos = 0
+            while pos < len(part) and brace_count > 0:
+                if part[pos] == '{':
+                    brace_count += 1
+                elif part[pos] == '}':
+                    brace_count -= 1
+                pos += 1
+            
+            if pos < len(part):
+                # Extract the content inside the DOMContentLoaded
+                dom_content = part[:pos-1].strip()
+                # Remove the closing });
+                dom_content = re.sub(r'\}\);?\s*$', '', dom_content).strip()
+                if dom_content:
+                    dom_ready_content.append(dom_content)
+                
+                # Add any remaining functions after this DOMContentLoaded
+                remaining = part[pos:].strip()
+                if remaining and not remaining.startswith('});'):
+                    functions.append(remaining)
+        
+        # Combine everything
+        result_parts = []
+        
+        # Add all function definitions first
+        if functions:
+            result_parts.extend(functions)
+        
+        # Add single consolidated DOMContentLoaded event
+        if dom_ready_content:
+            consolidated_dom_ready = f"""
+document.addEventListener('DOMContentLoaded', function() {{
+{chr(10).join('    ' + line for content in dom_ready_content for line in content.split(chr(10)) if line.strip())}
+}});"""
+            result_parts.append(consolidated_dom_ready)
+        
+        return '\n\n'.join(result_parts)
         
     def _process_freetext_blocks_html(self, html):
         """Process individual freetext question blocks in HTML."""
         import re
-        
-        def find_and_replace_admonitions(html_content):
-            result = html_content
+        import uuid
+
+        print(f"\n=== DEBUG: _process_freetext_blocks_html ===")
+        print(f"HTML snippet (first 500 chars): {html[:500]}")
+
+        # Extract all admonitions first
+        def extract_admonition_content(html):
+            """Extract content from freetext admonition divs, handling nested divs correctly."""
+            results = []
             
-            # Find start positions of all freetext admonitions
-            pattern = r'<div class="admonition freetext"[^>]*>'
-            matches = list(re.finditer(pattern, html_content))
-            
-            # Process matches in reverse order to avoid index shifting
-            for match in reversed(matches):
-                start_pos = match.start()
+            # Find all starting positions of individual freetext admonitions (NOT assessments)
+            start_pattern = r'<div class="admonition freetext"[^>]*>'
+            for start_match in re.finditer(start_pattern, html):
+                start_pos = start_match.end()
                 
-                # Find the matching closing </div> by counting div tags
-                pos = match.end()
+                # Count div tags to find the matching closing div
                 div_count = 1
+                pos = start_pos
                 
-                while pos < len(html_content) and div_count > 0:
-                    if html_content[pos:pos+5] == '<div ':
-                        div_count += 1
-                        pos += 5
-                    elif html_content[pos:pos+6] == '</div>':
+                while pos < len(html) and div_count > 0:
+                    # Look for the next div tag (opening or closing)
+                    next_div = re.search(r'<(/?)div[^>]*>', html[pos:])
+                    if not next_div:
+                        break
+                    
+                    if next_div.group(1):  # Closing div
                         div_count -= 1
-                        if div_count == 0:
-                            pos += 6
-                            break
-                        pos += 6
-                    else:
-                        pos += 1
+                    else:  # Opening div
+                        div_count += 1
+                    
+                    pos += next_div.end()
                 
                 if div_count == 0:
-                    # Found complete admonition
-                    self.current_page_has_questions = True
-                    
-                    # Extract content between the opening div and closing div
-                    content_start = match.end()
-                    content = html_content[content_start:pos-6]  # -6 for </div>
-                    
-                    # Extract the content inside the admonition, skipping the title if present
-                    title_match = re.search(r'<p class="admonition-title"[^>]*>.*?</p>(.*)', content, re.DOTALL)
-                    if title_match:
-                        clean_content = title_match.group(1).strip()
-                    else:
-                        clean_content = content.strip()
-                    
-                    # Parse the configuration from the content
-                    config = self._parse_question_config_from_html(clean_content)
-                    question_id = str(uuid.uuid4())[:8]
-                    
-                    # Replace the entire admonition with the question HTML
-                    question_html = self._generate_question_html(config, question_id)
-                    result = result[:start_pos] + question_html + result[pos:]
+                    # Found the matching closing div
+                    content = html[start_pos:pos - len('</div>')]
+                    results.append((start_match.group(0) + content + '</div>', content))
             
-            return result
+            return results
         
-        return find_and_replace_admonitions(html)
+        admonition_matches = extract_admonition_content(html)
+        print(f"Found {len(admonition_matches)} freetext admonition(s) to process")
+        
+        # PRE-GENERATE question IDs to ensure consistency
+        question_ids = {}
+        for i, (full_match, content) in enumerate(admonition_matches):
+            question_ids[i] = str(uuid.uuid4())[:8]
+            print(f"Pre-generated question ID {i}: {question_ids[i]}")
+        
+        def replace_question(match_info, match_index):
+            full_match, admonition_content = match_info
+            self.current_page_has_questions = True
+            
+            # Use pre-generated question ID for consistency
+            question_id = question_ids[match_index]
+            print(f"Processing question with ID: {question_id}")
+            
+            # Remove the admonition title if present
+            title_match = re.search(r'<p class="admonition-title"[^>]*>.*?</p>(.*)', admonition_content, re.DOTALL)
+            if title_match:
+                content = title_match.group(1).strip()
+            else:
+                content = admonition_content.strip()
+            
+            # Check if this is an assessment (contains freetext-assessment class)
+            is_assessment = 'freetext-assessment' in full_match
+            
+            if is_assessment:
+                # Parse as assessment with multiple questions
+                return self._parse_and_generate_assessment_html_from_admonition(content, question_id)
+            else:
+                # Parse configuration from HTML content
+                config = self._parse_question_config(content)
+                
+                # Clean up question content: remove --- separator if present
+                if '---' in config['question']:
+                    question_part = config['question'].split('---')[0].strip()
+                    config['question'] = question_part
+                
+                print(f"Parsed config: {config}")
+                
+                # Generate HTML and JavaScript with the SAME question_id
+                html = self._generate_question_html(config, question_id)
+                return html
+        
+        # Process each admonition with its pre-assigned ID
+        for i, (full_match, admonition_content) in enumerate(admonition_matches):
+            replacement = replace_question((full_match, admonition_content), i)
+            html = html.replace(full_match, replacement, 1)
+        
+        return html
+        
 
-    def _parse_freetext_config(self, content):
-        """Parse configuration from freetext code block content."""
+    def _parse_question_config(self, content):
+        """Parse question configuration from content (supports --- separator)."""
+        import re
+        
         config = {
             'question': '',
-            'type': 'short',
+            'type': self.config.get('default_question_type', 'short'),
             'show_answer': True,
-            'marks': 0,
-            'placeholder': 'Enter your answer...',
+            'marks': self.config.get('default_marks', 0),
+            'placeholder': self.config.get('default_placeholder', 'Enter your answer...'),
+            'rows': None,  # Will be set based on type if not explicitly configured
             'answer': ''
         }
         
+        print(f"DEBUG: Parsing content: {content[:200]}...")
+        
+        # Check for --- separator first (NEW FEATURE)
+        # In HTML, --- becomes <hr> or <hr />
+        hr_pattern = r'<hr[^>]*/?>'
+        has_separator = bool(re.search(hr_pattern, content)) or '---' in content
+        
+        if has_separator:
+            print("DEBUG: Found --- separator (or <hr>), splitting content")
+            
+            # Split by <hr> tags if present, otherwise by ---
+            if re.search(hr_pattern, content):
+                parts = re.split(hr_pattern, content, 1)
+            else:
+                parts = content.split('---', 1)
+            
+            if len(parts) >= 2:
+                question_content = parts[0].strip()
+                config_content = parts[1].strip()
+                
+                # Set the question content directly (preserves all rich content)
+                config['question'] = question_content
+                print(f"DEBUG: Question part length: {len(question_content)}")
+                print(f"DEBUG: Config part length: {len(config_content)}")
+                
+                # Parse configuration from config section only
+                self._parse_config_section(config_content, config)
+            else:
+                print("DEBUG: Separator found but couldn't split content, falling back to legacy")
+                # Fallback to legacy parsing
+                is_html = bool(re.search(r'<[^>]+>', content))
+                if is_html:
+                    self._parse_html_content_legacy(content, config)
+                else:
+                    self._parse_plain_text_content(content, config)
+            
+        else:
+            print("DEBUG: No --- separator found, using legacy parsing")
+            # Legacy parsing: detect HTML vs plain text and parse accordingly
+            is_html = bool(re.search(r'<[^>]+>', content))
+            print(f"DEBUG: Content type: {'HTML' if is_html else 'Plain text'}")
+            
+            if is_html:
+                self._parse_html_content_legacy(content, config)
+            else:
+                self._parse_plain_text_content(content, config)
+        
+        print(f"DEBUG: Final config: {config}")
+        return config
+
+    def _parse_config_section(self, config_content, config):
+        """Parse configuration from a dedicated config section using comma-separated format."""
+        import re
+        
+        # Clean up the content - remove HTML tags and normalize whitespace
+        clean_content = re.sub(r'<[^>]+>', '', config_content)
+        clean_content = re.sub(r'\s+', ' ', clean_content).strip()
+        
+        print(f"DEBUG: Parsing config content: {clean_content}")
+        
+        # Always use comma-separated parsing
+        config_dict = self._parse_comma_separated_config(clean_content)
+        
+        print(f"DEBUG: Parsed config dictionary: {config_dict}")
+        
+        # Apply config values with type conversion and validation
+        self._apply_config_dictionary(config_dict, config)
+
+    def _parse_comma_separated_config(self, content):
+        """Parse comma-separated config content into a dictionary."""
+        config_dict = {}
+        
+        # Simple comma-split approach for the basic format
+        items = [item.strip() for item in content.split(',')]
+        
+        for item in items:
+            if ':' in item:
+                key, value = item.split(':', 1)
+                key = key.strip()
+                value = value.strip()
+                
+                # Remove quotes if present
+                if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+                    value = value[1:-1]
+                
+                config_dict[key] = value
+        
+        return config_dict
+
+    def _apply_config_dictionary(self, config_dict, config):
+        """Apply configuration dictionary to config object with proper type conversion."""
+        
+        # Define type converters for each config key
+        type_converters = {
+            'marks': lambda x: int(x),
+            'rows': lambda x: int(x),
+            'show_answer': lambda x: x.lower() in ['true', 'yes', '1'],
+            'shuffle': lambda x: x.lower() in ['true', 'yes', '1'],
+            'type': lambda x: x,  # string, validated below
+            'placeholder': lambda x: x,  # string
+            'answer': lambda x: x,  # string
+            'title': lambda x: x,  # string (for assessments)
+            'question': lambda x: x,  # string
+        }
+        
+        # Valid values for certain config keys
+        valid_values = {
+            'type': ['short', 'long']
+        }
+        
+        # Apply each config value
+        for key, value in config_dict.items():
+            if key in type_converters:
+                try:
+                    # Convert to appropriate type
+                    converted_value = type_converters[key](value)
+                    
+                    # Validate if needed
+                    if key in valid_values and converted_value not in valid_values[key]:
+                        print(f"DEBUG: Invalid value for {key}: {converted_value}, using default")
+                        continue
+                    
+                    config[key] = converted_value
+                    print(f"DEBUG: Applied config {key} = {converted_value}")
+                    
+                except (ValueError, TypeError) as e:
+                    print(f"DEBUG: Could not convert {key} value '{value}': {e}")
+                    # Apply defaults for failed conversions
+                    if key == 'marks':
+                        config[key] = self.config.get('default_marks', 0)
+                    elif key == 'rows':
+                        config[key] = None  # Will use type-based default
+            else:
+                # Unknown config key - store as string
+                config[key] = value
+                print(f"DEBUG: Applied unknown config {key} = {value}")
+
+    def _parse_html_content_legacy(self, content, config):
+        """Legacy HTML parsing for backwards compatibility."""
+        import re
+        
+        # First check for comma-separated config format in HTML
+        comma_config_pattern = r'<p[^>]*>\s*([^<]*,\s*[^<]*)\s*</p>'
+        comma_match = re.search(comma_config_pattern, content)
+        if comma_match:
+            config_text = comma_match.group(1).strip()
+            print(f"DEBUG: Found comma-separated config in HTML: {config_text}")
+            
+            # Use the same dictionary-based parsing as the new method
+            self._parse_config_section(config_text, config)
+            
+            # Remove the config paragraph from content
+            remaining_content = content.replace(comma_match.group(0), '', 1)
+            remaining_content = re.sub(r'<p[^>]*>\s*</p>', '', remaining_content)
+            remaining_content = re.sub(r'\n\s*\n', '\n', remaining_content).strip()
+            
+            # If we found a question in config, use remaining content as additional question content
+            if config['question']:
+                if remaining_content:
+                    config['question'] = f"<p>{config['question']}</p>\n{remaining_content}"
+            else:
+                # Use remaining content as question
+                config['question'] = remaining_content
+            
+            return  # Done with comma-separated parsing
+        
+        # Fall back to legacy key: value parsing
+        # Parse HTML format: <p>key: value</p>
+        config_patterns = {
+            'question': r'<p[^>]*>\s*question:\s*(.*?)\s*</p>',
+            'marks': r'<p[^>]*>\s*marks:\s*(\d+)\s*</p>',
+            'placeholder': r'<p[^>]*>\s*placeholder:\s*(.*?)\s*</p>',
+            'show_answer': r'<p[^>]*>\s*show_answer:\s*(true|false|yes|no)\s*</p>',
+            'answer': r'<p[^>]*>\s*answer:\s*(.*?)\s*</p>',
+            'rows': r'<p[^>]*>\s*rows:\s*(\d+)\s*</p>',
+            'type': r'<p[^>]*>\s*type:\s*(short|long)\s*</p>'
+        }
+        
+        # Extract configuration values and track remaining content for rich content preservation
+        remaining_content = content
+        
+        for config_key, pattern in config_patterns.items():
+            print(f"DEBUG: Testing pattern for {config_key}: {pattern}")
+            
+            match = re.search(pattern, remaining_content, re.DOTALL | re.IGNORECASE | re.MULTILINE)
+            if match:
+                value = match.group(1).strip()
+                print(f"DEBUG: Found config: {config_key} = {value}")
+                
+                # Parse the value based on type
+                if config_key == 'marks' or config_key == 'rows':
+                    try:
+                        config[config_key] = int(value)
+                    except ValueError:
+                        if config_key == 'marks':
+                            config[config_key] = self.config.get('default_marks', 0)
+                        else:
+                            config[config_key] = None
+                elif config_key == 'show_answer':
+                    config[config_key] = value.lower() in ['true', 'yes', '1']
+                else:
+                    config[config_key] = value
+                
+                # Remove this config paragraph from remaining content
+                remaining_content = remaining_content.replace(match.group(0), '', 1)
+                print(f"DEBUG: Removed config paragraph '{match.group(0)}', remaining length: {len(remaining_content)}")
+            else:
+                print(f"DEBUG: No match found for {config_key}")
+        
+        # Clean up any empty paragraphs and normalize whitespace
+        remaining_content = re.sub(r'<p[^>]*>\s*</p>', '', remaining_content)
+        remaining_content = re.sub(r'\n\s*\n', '\n', remaining_content).strip()
+        
+        # If we found a question in config, use remaining content as additional question content
+        if config['question']:
+            if remaining_content:
+                # Combine question text with remaining rich content (after removing config paragraphs)
+                config['question'] = f"<p>{config['question']}</p>\n{remaining_content}"
+            else:
+                config['question'] = f"<p>{config['question']}</p>"
+        else:
+            # No explicit question config, use all remaining content as question (after removing config paragraphs)
+            config['question'] = remaining_content if remaining_content else '<p>No question text provided</p>'
+
+    def _parse_plain_text_content(self, content, config):
+        """Parse plain text content (original approach)."""
         lines = content.strip().split('\n')
         for line in lines:
             line = line.strip()
@@ -148,17 +538,76 @@ class FreetextPlugin(BasePlugin):
                 value = value.strip()
                 
                 if key in config:
+                    print(f"DEBUG: Found config: {key} = {value}")
                     if key == 'show_answer':
                         config[key] = value.lower() in ['true', 'yes', '1']
-                    elif key == 'marks':
+                    elif key in ['marks', 'rows']:
                         try:
                             config[key] = int(value)
                         except ValueError:
-                            config[key] = 0
+                            if key == 'marks':
+                                config[key] = self.config.get('default_marks', 0)
+                            else:
+                                config[key] = None
                     else:
                         config[key] = value
+
+    def _parse_and_generate_assessment_html_from_admonition(self, content, assessment_id=None):
+        """Parse assessment content from HTML admonition and generate HTML."""
+        import re
+        import uuid
         
-        return config
+        # Use provided assessment_id or generate a new one
+        if assessment_id is None:
+            assessment_id = str(uuid.uuid4())[:8]
+        
+        # Split content by <hr> tags to separate questions
+        question_sections = re.split(r'<hr[^>]*>', content)
+        
+        # Parse assessment-level configuration from first section
+        assessment_config = {
+            'title': 'Assessment',
+            'shuffle': None  # Will use global setting if not specified
+        }
+        
+        questions = []
+        
+        for idx, section_content in enumerate(question_sections):
+            section_content = section_content.strip()
+            if not section_content:
+                continue
+            
+            print(f"DEBUG: Processing assessment section {idx}: {section_content[:100]}...")
+                
+            # Parse this section using our existing HTML question parser
+            config = self._parse_question_config(section_content)
+            
+            # For the first section, also look for assessment-level configuration
+            if idx == 0:
+                # Look for title and shuffle in the first section
+                title_match = re.search(r'<p[^>]*>\s*title:\s*(.*?)\s*</p>', section_content, re.IGNORECASE)
+                if title_match:
+                    assessment_config['title'] = title_match.group(1).strip()
+                    print(f"DEBUG: Found assessment title: {assessment_config['title']}")
+                
+                shuffle_match = re.search(r'<p[^>]*>\s*shuffle:\s*(true|false|yes|no)\s*</p>', section_content, re.IGNORECASE)
+                if shuffle_match:
+                    assessment_config['shuffle'] = shuffle_match.group(1).lower() in ['true', 'yes', '1']
+                    print(f"DEBUG: Found assessment shuffle: {assessment_config['shuffle']}")
+            
+            # Only add questions that have actual question content
+            if config['question'] and config['question'].strip():
+                questions.append(config)
+                print(f"DEBUG: Added question {len(questions)}: marks={config['marks']}")
+        
+        print(f"DEBUG: Assessment total questions: {len(questions)}")
+        print(f"DEBUG: Assessment config: {assessment_config}")
+        
+        # Generate assessment HTML using the provided/generated assessment_id
+        if questions:
+            return self._generate_assessment_html(questions, assessment_id, assessment_config)
+        else:
+            return '<div class="error">No valid questions found in assessment</div>'
 
     def _parse_and_generate_assessment_html(self, content):
         """Parse assessment content from code block and generate HTML."""
@@ -181,10 +630,10 @@ class FreetextPlugin(BasePlugin):
             lines = q_content.split('\n')
             question_config = {
                 'question': '',
-                'type': 'short',
+                'type': self.config.get('default_question_type', 'short'),
                 'show_answer': True,
-                'marks': 0,
-                'placeholder': 'Enter your answer...',
+                'marks': self.config.get('default_marks', 0),
+                'placeholder': self.config.get('default_placeholder', 'Enter your answer...'),
                 'answer': ''
             }
             
@@ -212,7 +661,7 @@ class FreetextPlugin(BasePlugin):
                             try:
                                 question_config[key] = int(value)
                             except ValueError:
-                                question_config[key] = 0
+                                question_config[key] = self.config.get('default_marks', 0)
                         else:
                             question_config[key] = value
             
@@ -231,12 +680,44 @@ class FreetextPlugin(BasePlugin):
         """Process freetext assessment blocks in HTML."""
         import re
         
-        # Pattern to match admonition divs with freetext-assessment class
-        pattern = r'<div class="admonition freetext-assessment"[^>]*>(.*?)</div>'
+        def extract_assessment_content(html):
+            """Extract content from freetext-assessment admonition divs, handling nested divs correctly."""
+            results = []
+            
+            # Find all starting positions of freetext-assessment admonitions
+            start_pattern = r'<div class="admonition freetext-assessment"[^>]*>'
+            for start_match in re.finditer(start_pattern, html):
+                start_pos = start_match.end()
+                
+                # Count div tags to find the matching closing div
+                div_count = 1
+                pos = start_pos
+                
+                while pos < len(html) and div_count > 0:
+                    # Look for the next div tag (opening or closing)
+                    next_div = re.search(r'<(/?)div[^>]*>', html[pos:])
+                    if not next_div:
+                        break
+                    
+                    if next_div.group(1):  # Closing div
+                        div_count -= 1
+                    else:  # Opening div
+                        div_count += 1
+                    
+                    pos += next_div.end()
+                
+                if div_count == 0:
+                    # Found the matching closing div
+                    content = html[start_pos:pos - len('</div>')]
+                    results.append((start_match.group(0) + content + '</div>', content))
+            
+            return results
         
-        def replace_assessment(match):
+        assessment_matches = extract_assessment_content(html)
+        
+        def replace_assessment(match_info):
+            full_match, admonition_content = match_info
             self.current_page_has_questions = True
-            admonition_content = match.group(1)
             
             # Extract the content inside the admonition, skipping the title if present
             title_match = re.search(r'<p class="admonition-title"[^>]*>.*?</p>(.*)', admonition_content, re.DOTALL)
@@ -251,103 +732,12 @@ class FreetextPlugin(BasePlugin):
             
             return self._generate_assessment_html(questions, assessment_id, assessment_config)
         
-        return re.sub(pattern, replace_assessment, html, flags=re.DOTALL)
-
-    def _parse_question_config_from_html(self, html_content):
-        """Parse question configuration from HTML content while preserving rich content."""
-        import re
+        # Replace all assessments
+        for full_match, content in assessment_matches:
+            replacement = replace_assessment((full_match, content))
+            html = html.replace(full_match, replacement)
         
-        config = {
-            'question': '',
-            'type': 'short',
-            'show_answer': True,
-            'marks': 0,
-            'placeholder': 'Enter your answer...',
-            'answer': ''
-        }
-        
-        # Simple approach: extract pieces we recognize and build the question content
-        question_content_parts = []
-        remaining_html = html_content
-        
-        # 1. Find and extract the question text (first paragraph starting with "question:")
-        question_match = re.search(r'<p[^>]*>question:\s*(.*?)</p>', remaining_html, re.DOTALL)
-        if question_match:
-            question_text = question_match.group(1).strip()
-            if question_text:
-                question_content_parts.append(f'<p>{question_text}</p>')
-            # Remove this paragraph from remaining HTML
-            remaining_html = remaining_html.replace(question_match.group(0), '', 1)
-        
-        # 2. Find and extract Mermaid diagrams
-        mermaid_matches = re.findall(r'<pre class="mermaid"><code>.*?</code></pre>', remaining_html, re.DOTALL)
-        for mermaid_html in mermaid_matches:
-            question_content_parts.append(mermaid_html)
-            # Remove from remaining HTML
-            remaining_html = remaining_html.replace(mermaid_html, '', 1)
-        
-        # 3. Find and extract code blocks
-        code_matches = re.findall(r'<div class="language-[^"]*"[^>]*>.*?</div>', remaining_html, re.DOTALL)
-        for code_html in code_matches:
-            question_content_parts.append(code_html)
-            # Remove from remaining HTML
-            remaining_html = remaining_html.replace(code_html, '', 1)
-        
-        # 4. Find and extract image paragraphs
-        img_matches = re.findall(r'<p[^>]*>\s*<img[^>]*>\s*</p>', remaining_html, re.DOTALL)
-        for img_html in img_matches:
-            question_content_parts.append(img_html)
-            # Remove from remaining HTML
-            remaining_html = remaining_html.replace(img_html, '', 1)
-        
-        # 5. Parse configuration from remaining paragraphs
-        config_paragraphs = re.findall(r'<p[^>]*>(.*?)</p>', remaining_html, re.DOTALL)
-        for p_content in config_paragraphs:
-            # Extract clean text from paragraph
-            clean_text = re.sub(r'<[^>]+>', '', p_content).strip()
-            
-            # Parse configuration lines
-            lines = clean_text.split('\n')
-            content_lines = []
-            
-            for line in lines:
-                line = line.strip()
-                if not line:
-                    continue
-                    
-                # Check if this line is configuration
-                if ':' in line:
-                    parts = line.split(':', 1)
-                    if len(parts) == 2:
-                        key = parts[0].strip()
-                        value = parts[1].strip()
-                        
-                        if key in config:
-                            # This is a configuration line
-                            if key == 'show_answer':
-                                config[key] = value.lower() in ['true', 'yes', '1']
-                            elif key == 'marks':
-                                try:
-                                    config[key] = int(value)
-                                except ValueError:
-                                    config[key] = 0
-                            else:
-                                config[key] = value
-                            continue
-                
-                # Not a config line, add to content
-                content_lines.append(line)
-            
-            # Add any non-config content to question
-            if content_lines:
-                content_text = '\n'.join(content_lines).strip()
-                if content_text:
-                    question_content_parts.append(f'<p>{content_text}</p>')
-        
-        # Combine all question content parts
-        config['question'] = ''.join(question_content_parts)
-        
-        return config
+        return html
 
     def _parse_assessment_with_config_from_html(self, html_content):
         """Parse assessment configuration and questions from HTML content."""
@@ -359,70 +749,40 @@ class FreetextPlugin(BasePlugin):
             'title': 'Assessment'
         }
         
-        # Split content by horizontal rules (---) which separate questions
-        # Look for <hr> tags or other separators
-        question_blocks = re.split(r'<hr[^>]*>|---', html_content)
+        # First, extract assessment-level configuration (title, shuffle)
+        config_patterns = {
+            'title': r'<p[^>]*>\s*title:\s*(.*?)\s*</p>',
+            'shuffle': r'<p[^>]*>\s*shuffle:\s*(.*?)\s*</p>'
+        }
+        
+        for key, pattern in config_patterns.items():
+            match = re.search(pattern, html_content, re.IGNORECASE)
+            if match:
+                value = match.group(1).strip()
+                if key == 'shuffle':
+                    assessment_config[key] = value.lower() in ['true', 'yes', '1']
+                else:
+                    assessment_config[key] = value
+                
+                # Remove the config line from content
+                html_content = re.sub(pattern, '', html_content, flags=re.IGNORECASE)
+        
+        # Split content by horizontal rules (<hr>) which separate questions
+        question_blocks = re.split(r'<hr[^>]*>', html_content)
         
         questions = []
-        first_block = True
         
         for block in question_blocks:
             block = block.strip()
             if not block:
                 continue
                 
-            if first_block:
-                # First block might contain assessment-level configuration
-                first_block = False
-                
-                # Look for assessment config in the first block
-                config_lines = []
-                question_content = []
-                
-                # Split by paragraphs to find config vs content
-                html_blocks = re.split(r'</p>|</div>', block)
-                
-                for html_block in html_blocks:
-                    html_block = html_block.strip()
-                    if not html_block:
-                        continue
-                        
-                    # Remove opening tags
-                    clean_block = re.sub(r'^<[^>]+>', '', html_block)
-                    
-                    # Check if this looks like configuration
-                    if re.match(r'^\s*(title|shuffle)\s*:', clean_block):
-                        config_line = re.sub(r'<[^>]+>', '', clean_block).strip()
-                        if ':' in config_line:
-                            key, value = config_line.split(':', 1)
-                            key = key.strip()
-                            value = value.strip()
-                            
-                            if key == 'shuffle':
-                                assessment_config['shuffle'] = value.lower() in ['true', 'yes', '1']
-                            elif key == 'title':
-                                assessment_config['title'] = value
-                    else:
-                        # This is question content
-                        if clean_block.strip():
-                            question_content.append(html_block)
-                
-                # If there's question content in the first block, parse it as a question
-                if question_content:
-                    question_html = ''.join(question_content)
-                    config = self._parse_question_config_from_html(question_html)
-                    if config['question']:
-                        questions.append(config)
-            else:
-                # Parse as regular question
-                config = self._parse_question_config_from_html(block)
-                if config['question']:
-                    questions.append(config)
+            # Parse each block as a question
+            config = self._parse_question_config(block)
+            if config['question']:
+                questions.append(config)
         
-        # Apply shuffling if enabled
-        should_shuffle = assessment_config['shuffle']
-        if should_shuffle is None:  # Use global setting if not specified
-            should_shuffle = self.config.get('shuffle_questions', False)
+        return assessment_config, questions
         
         if should_shuffle and len(questions) > 1:
             random.shuffle(questions)
@@ -457,42 +817,6 @@ class FreetextPlugin(BasePlugin):
             return self._generate_assessment_html(questions, assessment_id, assessment_config)
         
         return re.sub(pattern, replace_assessment, markdown, flags=re.DOTALL)
-
-    def _parse_question_config(self, content):
-        """Parse question configuration from content."""
-        config = {
-            'question': '',
-            'type': 'short',
-            'show_answer': True,
-            'marks': 0,
-            'placeholder': 'Enter your answer...',
-            'answer': ''
-        }
-        
-        lines = content.strip().split('\n')
-        
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-                
-            if ':' in line:
-                key, value = line.split(':', 1)
-                key = key.strip()
-                value = value.strip()
-                
-                if key in config:
-                    if key in ['show_answer']:
-                        config[key] = value.lower() in ['true', 'yes', '1']
-                    elif key in ['marks']:
-                        try:
-                            config[key] = int(value)
-                        except ValueError:
-                            config[key] = 0
-                    else:
-                        config[key] = value
-        
-        return config
 
     def _parse_assessment_questions(self, content):
         """Parse multiple questions from assessment content."""
@@ -571,15 +895,65 @@ class FreetextPlugin(BasePlugin):
         
         return assessment_config, questions
 
+    def _process_freetext_blocks(self, markdown):
+        """Process individual freetext question blocks."""
+        pattern = r'!!! freetext\s*\n(.*?)(?=\n!!!|\n\n|$)'
+        
+        def replace_freetext(match):
+            self.current_page_has_questions = True
+            content = match.group(1)
+            config = self._parse_question_config(content)
+            question_id = str(uuid.uuid4())[:8]
+            return self._generate_question_html(config, question_id)
+        
+        return re.sub(pattern, replace_freetext, markdown, flags=re.DOTALL)
+
+    def _process_assessment_blocks(self, markdown):
+        """Process freetext assessment blocks with multiple questions."""
+        pattern = r'!!! freetext-assessment\s*\n(.*?)(?=\n!!!|\n\n|$)'
+        
+        def replace_assessment(match):
+            self.current_page_has_questions = True
+            content = match.group(1)
+            
+            # Parse assessment-level configuration and questions
+            assessment_config, questions = self._parse_assessment_with_config(content)
+            assessment_id = str(uuid.uuid4())[:8]
+            
+            return self._generate_assessment_html(questions, assessment_id, assessment_config)
+        
+        return re.sub(pattern, replace_assessment, markdown, flags=re.DOTALL)
+
     def _parse_assessment_questions(self, content):
         """Parse multiple questions from assessment content (legacy method)."""
         _, questions = self._parse_assessment_with_config(content)
         return questions
 
+    def _escape_html(self, text):
+        """Escape HTML entities for safe use in HTML attributes."""
+        if not text:
+            return ""
+        return str(text).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#x27;')
+
     def _generate_question_html(self, config, question_id):
         """Generate HTML for a single question."""
-        rows = self.config.get('default_answer_rows', 3) if config['type'] == 'short' else 6
+        # Determine rows: explicit config > type-based defaults
+        if 'rows' in config and config['rows'] is not None and config['rows'] > 0:
+            rows = config['rows']
+        elif config['type'] == 'long':
+            rows = self.config.get('default_long_answer_rows', 6)
+        else:  # short type
+            rows = self.config.get('default_answer_rows', 3)
+            
         char_counter = self._get_character_counter_html(question_id) if self.config.get('show_character_count', True) else ''
+        
+        # Build oninput attribute conditionally
+        oninput_parts = []
+        if self.config.get('show_character_count', True):
+            oninput_parts.append(f"updateCharCount_{question_id}()")
+        # Always include auto-save call - the function itself controls whether it's active
+        oninput_parts.append(f"autoSave_{question_id}()")
+        oninput_attr = f'oninput="{"; ".join(oninput_parts)};"' if oninput_parts else ''
         
         # Process question text as markdown
         question_html = self._process_markdown_content(config['question'])
@@ -595,8 +969,8 @@ class FreetextPlugin(BasePlugin):
         <textarea 
             id="answer_{question_id}" 
             rows="{rows}" 
-            placeholder="{config['placeholder']}"
-            oninput="updateCharCount_{question_id}(); autoSave_{question_id}();"
+            placeholder="{self._escape_html(config['placeholder'])}"
+            {oninput_attr}
         ></textarea>
         {char_counter}
     </div>
@@ -607,11 +981,14 @@ class FreetextPlugin(BasePlugin):
     
     <div id="feedback_{question_id}" class="feedback" style="display: none;"></div>
 </div>
-
-<script>
-{self._generate_question_javascript(question_id, config)}
-</script>
 '''
+        
+        # CRITICAL: Generate JavaScript immediately with the SAME question_id
+        question_js = self._generate_question_javascript(question_id, config)
+        if hasattr(self, 'current_page_javascript'):
+            self.current_page_javascript.append(question_js)
+            print(f"GENERATED JS for question {question_id}: Functions should include updateCharCount_{question_id}, submitAnswer_{question_id}, autoSave_{question_id}")
+        
         return html
 
     def _generate_assessment_html(self, questions, assessment_id, assessment_config=None):
@@ -629,8 +1006,24 @@ class FreetextPlugin(BasePlugin):
         questions_html = ""
         for i, config in enumerate(questions):
             question_id = f"{assessment_id}_q{i+1}"
-            rows = self.config.get('default_answer_rows', 3) if config['type'] == 'short' else 6
+            
+            # Determine rows: explicit config > type-based defaults
+            if 'rows' in config and config['rows'] is not None and config['rows'] > 0:
+                rows = config['rows']
+            elif config['type'] == 'long':
+                rows = self.config.get('default_long_answer_rows', 6)
+            else:  # short type
+                rows = self.config.get('default_answer_rows', 3)
+                
             char_counter = self._get_character_counter_html(question_id) if self.config.get('show_character_count', True) else ''
+            
+            # Build oninput attribute conditionally for assessments
+            oninput_parts = []
+            if self.config.get('show_character_count', True):
+                oninput_parts.append(f"updateCharCount_{question_id}()")
+            # Always include auto-save call - the function itself controls whether it's active
+            oninput_parts.append(f"autoSaveAssessment_{assessment_id}()")
+            oninput_attr = f'oninput="{"; ".join(oninput_parts)};"' if oninput_parts else ''
             
             # Process question text as markdown
             question_html = self._process_markdown_content(config['question'])
@@ -647,8 +1040,8 @@ class FreetextPlugin(BasePlugin):
         <textarea 
             id="answer_{question_id}" 
             rows="{rows}" 
-            placeholder="{config['placeholder']}"
-            oninput="updateCharCount_{question_id}(); autoSaveAssessment_{assessment_id}();"
+            placeholder="{self._escape_html(config['placeholder'])}"
+            {oninput_attr}
         ></textarea>
         {char_counter}
     </div>
@@ -672,11 +1065,13 @@ class FreetextPlugin(BasePlugin):
     
     <div id="assessment_feedback_{assessment_id}" class="assessment-feedback" style="display: none;"></div>
 </div>
-
-<script>
-{self._generate_assessment_javascript(assessment_id, questions)}
-</script>
 '''
+        
+        # Collect JavaScript instead of outputting it inline
+        assessment_js = self._generate_assessment_javascript(assessment_id, questions)
+        if hasattr(self, 'current_page_javascript'):
+            self.current_page_javascript.append(assessment_js)
+            
         return html
 
     def _get_character_counter_html(self, question_id):
@@ -686,26 +1081,42 @@ class FreetextPlugin(BasePlugin):
     def _generate_question_javascript(self, question_id, config):
         """Generate JavaScript for individual questions."""
         enable_auto_save = str(self.config.get('enable_auto_save', True)).lower()
+        show_character_count = self.config.get('show_character_count', True)
         
-        return f'''
-function updateCharCount_{question_id}() {{
+        js_functions = []
+        
+        print(f"Generating JavaScript for question_id: {question_id}")
+        
+        # Character count function (only if enabled)
+        if show_character_count:
+            char_count_func = f'''function updateCharCount_{question_id}() {{
     const textarea = document.getElementById('answer_{question_id}');
     const counter = document.getElementById('charCount_{question_id}');
     if (counter) {{
         counter.textContent = textarea.value.length + ' characters';
     }}
-}}
-
-function autoSave_{question_id}() {{
+}}'''
+            js_functions.append(char_count_func)
+            print(f"Added updateCharCount_{question_id}")
+        
+        # Auto-save function (always generated but conditionally enabled) 
+        auto_save_func = f'''function autoSave_{question_id}() {{
     if ({enable_auto_save}) {{
         const answer = document.getElementById('answer_{question_id}').value;
         localStorage.setItem('freetext_answer_{question_id}', answer);
     }}
-}}
-
-function submitAnswer_{question_id}() {{
+}}'''
+        js_functions.append(auto_save_func)
+        print(f"Added autoSave_{question_id}")
+        
+        # CRITICAL FIX: Clean the answer text for JavaScript
+        clean_answer = self._clean_answer_for_javascript(config.get("answer", "No sample answer provided."))
+        
+        # Submit function (always included)
+        submit_func = f'''function submitAnswer_{question_id}() {{
     const answer = document.getElementById('answer_{question_id}').value;
     const feedback = document.getElementById('feedback_{question_id}');
+    const submitBtn = document.querySelector('[data-question-id="{question_id}"] .submit-btn');
     
     if (answer.trim() === '') {{
         feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
@@ -713,30 +1124,60 @@ function submitAnswer_{question_id}() {{
         return;
     }}
     
-    let successMessage = '<div class="success">Answer submitted successfully!</div>';
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
     
-    // Automatically show answer if show_answer is enabled
+    // Only show sample answer if show_answer is enabled, no success message
     if ({str(config.get('show_answer', False)).lower()}) {{
-        successMessage += '<div class="answer-display"><strong>Sample Answer:</strong><br>{config.get("answer", "No sample answer provided.")}</div>';
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>{clean_answer}</div>';
+        feedback.style.display = 'block';
+    }} else {{
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
     }}
-    
-    feedback.innerHTML = successMessage;
-    feedback.style.display = 'block';
     
     // Save submission
     localStorage.setItem('freetext_submitted_{question_id}', 'true');
     localStorage.setItem('freetext_answer_{question_id}', answer);
-}}
-
-// Auto-load saved answers
-document.addEventListener('DOMContentLoaded', function() {{
-    const savedAnswer = localStorage.getItem('freetext_answer_{question_id}');
-    if (savedAnswer) {{
-        document.getElementById('answer_{question_id}').value = savedAnswer;
-        updateCharCount_{question_id}();
+}}'''
+        js_functions.append(submit_func)
+        print(f"Added submitAnswer_{question_id}")
+        
+        # Store DOM ready initialization separately for consolidation (with unique variable names)
+        dom_ready_js = f'''// Initialize question {question_id}
+    const savedAnswer_{question_id} = localStorage.getItem('freetext_answer_{question_id}');
+    const isSubmitted_{question_id} = localStorage.getItem('freetext_submitted_{question_id}');
+    
+    if (savedAnswer_{question_id}) {{
+        const textarea_{question_id} = document.getElementById('answer_{question_id}');
+        if (textarea_{question_id}) {{
+            textarea_{question_id}.value = savedAnswer_{question_id};'''
+        
+        if show_character_count:
+            dom_ready_js += f'''
+            updateCharCount_{question_id}();'''
+        
+        dom_ready_js += f'''
+        }}
     }}
-}});
-'''
+    
+    // Restore button state if previously submitted
+    if (isSubmitted_{question_id} === 'true') {{
+        const submitBtn_{question_id} = document.querySelector('[data-question-id="{question_id}"] .submit-btn');
+        if (submitBtn_{question_id}) {{
+            submitBtn_{question_id}.textContent = 'Submitted';
+            submitBtn_{question_id}.title = 'Click to resubmit';
+        }}
+    }}'''
+        
+        # Store DOM ready code for later consolidation
+        if hasattr(self, 'current_page_dom_ready'):
+            self.current_page_dom_ready.append(dom_ready_js)
+        
+        final_js = '\n\n'.join(js_functions)
+        print(f"Final JavaScript for {question_id} ({len(js_functions)} functions):\n{final_js[:200]}...")
+        return final_js
 
     def _generate_assessment_javascript(self, assessment_id, questions):
         """Generate JavaScript for assessments."""
@@ -762,6 +1203,7 @@ function submitAssessment_{assessment_id}() {{
     answers['{qid}'] = answer_{qid};''' for qid in question_ids)}
     
     const assessmentFeedback = document.getElementById('assessment_feedback_{assessment_id}');
+    const submitBtn = document.querySelector('[data-assessment-id="{assessment_id}"] .submit-assessment-btn');
     
     if (!allAnswered) {{
         assessmentFeedback.innerHTML = '<div class="warning">Please answer all questions before submitting.</div>';
@@ -769,14 +1211,18 @@ function submitAssessment_{assessment_id}() {{
         return;
     }}
     
-    assessmentFeedback.innerHTML = '<div class="success">Assessment submitted successfully!</div>';
-    assessmentFeedback.style.display = 'block';
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Hide the assessment feedback (no success message)
+    assessmentFeedback.style.display = 'none';
     
     // Automatically show answers for questions with show_answer enabled
     {chr(10).join(f'''
     if ({str(questions[i].get('show_answer', False)).lower()}) {{
         const feedback_{qid} = document.getElementById('feedback_{qid}');
-        feedback_{qid}.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>{questions[i].get("answer", "No sample answer provided.")}</div>';
+        feedback_{qid}.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>{self._clean_answer_for_javascript(questions[i].get("answer", "No sample answer provided."))}</div>';
         feedback_{qid}.style.display = 'block';
     }}''' for i, qid in enumerate(question_ids))}
     
@@ -787,9 +1233,10 @@ function submitAssessment_{assessment_id}() {{
 
 '''
 
-        # Add character counters
-        for qid in question_ids:
-            js += f'''
+        # Add character counters (only if enabled)
+        if self.config.get('show_character_count', True):
+            for qid in question_ids:
+                js += f'''
 function updateCharCount_{qid}() {{
     const textarea = document.getElementById('answer_{qid}');
     const counter = document.getElementById('charCount_{qid}');
@@ -808,7 +1255,7 @@ function shuffleQuestions_{assessment_id}() {{
     
     if (shouldShuffle) {{
         const questionsContainer = assessment;
-        const questions = Array.from(questionsContainer.querySelectorAll('.assessment-question'));
+        const questions = Array.from(questionsContainer.querySelectorAll('[data-question-id]'));
         const header = questionsContainer.querySelector('.assessment-header');
         const buttons = questionsContainer.querySelector('.assessment-buttons');
         const feedback = questionsContainer.querySelector('.assessment-feedback');
@@ -851,38 +1298,113 @@ document.addEventListener('DOMContentLoaded', function() {{
     shuffleQuestions_{assessment_id}();
     
     const savedAssessment = localStorage.getItem('freetext_assessment_{assessment_id}');
+    const isAssessmentSubmitted = localStorage.getItem('freetext_assessment_submitted_{assessment_id}');
+    
     if (savedAssessment) {{
         const answers = JSON.parse(savedAssessment);
-        {chr(10).join(f'''
-        if (answers['{qid}']) {{
-            document.getElementById('answer_{qid}').value = answers['{qid}'];
-            updateCharCount_{qid}();
-        }}''' for qid in question_ids)}
+        {chr(10).join(self._generate_restore_answer_js(qid) for qid in question_ids)}
+    }}
+    
+    // Restore assessment button state if previously submitted
+    if (isAssessmentSubmitted === 'true') {{
+        const submitBtn = document.querySelector('[data-assessment-id="{assessment_id}"] .submit-assessment-btn');
+        if (submitBtn) {{
+            submitBtn.textContent = 'Submitted';
+            submitBtn.title = 'Click to resubmit';
+        }}
     }}
 }});
 '''
         
         return js
 
+    def _generate_restore_answer_js(self, qid):
+        """Generate JavaScript to restore a saved answer."""
+        js = f'''
+        if (answers['{qid}']) {{
+            document.getElementById('answer_{qid}').value = answers['{qid}'];'''
+        
+        if self.config.get('show_character_count', True):
+            js += f'''
+            updateCharCount_{qid}();'''
+        
+        js += '''
+        }'''
+        
+        return js
+
     def on_post_page(self, output, page, config, **kwargs):
-        """Add CSS styling if enabled and questions were found."""
+        """Add CSS styling and JavaScript if enabled and questions were found."""
         # Check if this page has questions
         page_has_questions = self.page_questions.get(page.file.src_path, False)
         
-        # Insert CSS if enabled and this page has questions
-        if not self.config.get('enable_css', True) or not page_has_questions:
+        if not page_has_questions:
             return output
             
-        css = self._generate_css()
+        # Add consolidated JavaScript if there are questions on this page
+        if hasattr(self, 'page_javascript') and page.file.src_path in self.page_javascript:
+            js_data = self.page_javascript[page.file.src_path]
+            
+            # Combine functions and DOM ready code
+            all_functions = '\n\n'.join(js_data['functions'])
+            
+            # Add single consolidated DOMContentLoaded event if we have DOM ready code
+            if js_data['dom_ready']:
+                dom_ready_content = '\n'.join('    ' + line for content in js_data['dom_ready'] for line in content.split('\n') if line.strip())
+                consolidated_dom_ready = f"""
+document.addEventListener('DOMContentLoaded', function() {{
+{dom_ready_content}
+}});"""
+                final_js = all_functions + '\n\n' + consolidated_dom_ready
+            else:
+                final_js = all_functions
+            
+            # Insert JavaScript at the beginning of head section to ensure functions are defined first
+            js_block = f'\n<script>\n{final_js}\n</script>'
+            if '<head>' in output:
+                output = output.replace('<head>', '<head>' + js_block)
+            elif '</head>' in output:
+                output = output.replace('</head>', js_block + '\n</head>')
+            else:
+                # Fallback: add before closing body tag if no head section found
+                if '</body>' in output:
+                    output = output.replace('</body>', js_block + '\n</body>')
+                else:
+                    output += js_block
+            print(f"Added consolidated JavaScript block with {len(js_data['functions'])} function groups and {len(js_data['dom_ready'])} DOM ready blocks")
         
-        # Insert CSS before closing </head> tag
-        if '</head>' in output:
-            output = output.replace('</head>', css + '\n</head>')
-        else:
-            # Fallback: add at the beginning of the body
-            output = css + '\n' + output
+        # Insert CSS if enabled
+        if self.config.get('enable_css', True):
+            css = self._generate_css()
+            
+            # Insert CSS before closing </head> tag
+            if '</head>' in output:
+                output = output.replace('</head>', css + '\n</head>')
+            else:
+                # Fallback: add at the beginning of the body
+                output = css + '\n' + output
             
         return output
+
+    def _clean_answer_for_javascript(self, answer_text):
+        """Clean answer text for safe embedding in JavaScript strings."""
+        if not answer_text:
+            return "No sample answer provided."
+        
+        clean_answer = str(answer_text)
+        
+        # Remove triple quotes if present
+        if clean_answer.startswith('"""') and clean_answer.endswith('"""'):
+            clean_answer = clean_answer[3:-3]
+        
+        # Escape characters for JavaScript string embedding
+        clean_answer = clean_answer.replace('\\', '\\\\')  # Escape backslashes first
+        clean_answer = clean_answer.replace("'", "\\'")    # Escape single quotes
+        clean_answer = clean_answer.replace('"', '\\"')    # Escape double quotes
+        clean_answer = clean_answer.replace('\n', '\\n')   # Escape newlines
+        clean_answer = clean_answer.replace('\r', '\\r')   # Escape carriage returns
+        
+        return clean_answer
 
     def _generate_css(self):
         """Generate comprehensive CSS for the plugin."""

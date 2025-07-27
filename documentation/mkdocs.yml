@@ -1,0 +1,66 @@
+site_name: MkDocs Free-Text Questions Plugin
+site_description: A comprehensive MkDocs plugin for adding interactive free-text questions and assessments
+site_author: Drew Kearsey
+site_url: https://d-kearsey.github.io/mkdocs-freetext/
+docs_dir: docs
+
+repo_name: D-Kearsey/mkdocs-freetext
+repo_url: https://github.com/D-Kearsey/mkdocs-freetext
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+  - freetext
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Live Demo: demo.md
+  - Configuration: configuration.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  

@@ -1,0 +1,2224 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+<script>
+
+function autoSaveAssessment_6232bb43() {
+    if (true) {
+        const answers = {};
+                answers["6232bb43_q1"] = document.getElementById("answer_6232bb43_q1").value;
+        answers["6232bb43_q2"] = document.getElementById("answer_6232bb43_q2").value;
+        answers["6232bb43_q3"] = document.getElementById("answer_6232bb43_q3").value;
+        answers["6232bb43_q4"] = document.getElementById("answer_6232bb43_q4").value;
+        answers["6232bb43_q5"] = document.getElementById("answer_6232bb43_q5").value;
+        answers["6232bb43_q6"] = document.getElementById("answer_6232bb43_q6").value;
+        localStorage.setItem('freetext_assessment_6232bb43', JSON.stringify(answers));
+    }
+}
+
+function submitAssessment_6232bb43() {
+    const answers = {};
+    let allAnswered = true;
+    
+    
+    const answer_6232bb43_q1 = document.getElementById('answer_6232bb43_q1').value;
+    if (answer_6232bb43_q1.trim() === '') allAnswered = false;
+    answers['6232bb43_q1'] = answer_6232bb43_q1;
+
+    const answer_6232bb43_q2 = document.getElementById('answer_6232bb43_q2').value;
+    if (answer_6232bb43_q2.trim() === '') allAnswered = false;
+    answers['6232bb43_q2'] = answer_6232bb43_q2;
+
+    const answer_6232bb43_q3 = document.getElementById('answer_6232bb43_q3').value;
+    if (answer_6232bb43_q3.trim() === '') allAnswered = false;
+    answers['6232bb43_q3'] = answer_6232bb43_q3;
+
+    const answer_6232bb43_q4 = document.getElementById('answer_6232bb43_q4').value;
+    if (answer_6232bb43_q4.trim() === '') allAnswered = false;
+    answers['6232bb43_q4'] = answer_6232bb43_q4;
+
+    const answer_6232bb43_q5 = document.getElementById('answer_6232bb43_q5').value;
+    if (answer_6232bb43_q5.trim() === '') allAnswered = false;
+    answers['6232bb43_q5'] = answer_6232bb43_q5;
+
+    const answer_6232bb43_q6 = document.getElementById('answer_6232bb43_q6').value;
+    if (answer_6232bb43_q6.trim() === '') allAnswered = false;
+    answers['6232bb43_q6'] = answer_6232bb43_q6;
+    
+    const assessmentFeedback = document.getElementById('assessment_feedback_6232bb43');
+    const submitBtn = document.querySelector('[data-assessment-id="6232bb43"] .submit-assessment-btn');
+    
+    if (!allAnswered) {
+        assessmentFeedback.innerHTML = '<div class="warning">Please answer all questions before submitting.</div>';
+        assessmentFeedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Hide the assessment feedback (no success message)
+    assessmentFeedback.style.display = 'none';
+    
+    // Automatically show answers for questions with show_answer enabled
+    
+    if (true) {
+        const feedback_6232bb43_q1 = document.getElementById('feedback_6232bb43_q1');
+        feedback_6232bb43_q1.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>No sample answer provided.</div>';
+        feedback_6232bb43_q1.style.display = 'block';
+    }
+
+    if (true) {
+        const feedback_6232bb43_q2 = document.getElementById('feedback_6232bb43_q2');
+        feedback_6232bb43_q2.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>No sample answer provided.</div>';
+        feedback_6232bb43_q2.style.display = 'block';
+    }
+
+    if (true) {
+        const feedback_6232bb43_q3 = document.getElementById('feedback_6232bb43_q3');
+        feedback_6232bb43_q3.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>No sample answer provided.</div>';
+        feedback_6232bb43_q3.style.display = 'block';
+    }
+
+    if (true) {
+        const feedback_6232bb43_q4 = document.getElementById('feedback_6232bb43_q4');
+        feedback_6232bb43_q4.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>No sample answer provided.</div>';
+        feedback_6232bb43_q4.style.display = 'block';
+    }
+
+    if (true) {
+        const feedback_6232bb43_q5 = document.getElementById('feedback_6232bb43_q5');
+        feedback_6232bb43_q5.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>No sample answer provided.</div>';
+        feedback_6232bb43_q5.style.display = 'block';
+    }
+
+    if (true) {
+        const feedback_6232bb43_q6 = document.getElementById('feedback_6232bb43_q6');
+        feedback_6232bb43_q6.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>No sample answer provided.</div>';
+        feedback_6232bb43_q6.style.display = 'block';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_assessment_submitted_6232bb43', 'true');
+    localStorage.setItem('freetext_assessment_6232bb43', JSON.stringify(answers));
+}
+
+
+function updateCharCount_6232bb43_q1() {
+    const textarea = document.getElementById('answer_6232bb43_q1');
+    const counter = document.getElementById('charCount_6232bb43_q1');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function updateCharCount_6232bb43_q2() {
+    const textarea = document.getElementById('answer_6232bb43_q2');
+    const counter = document.getElementById('charCount_6232bb43_q2');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function updateCharCount_6232bb43_q3() {
+    const textarea = document.getElementById('answer_6232bb43_q3');
+    const counter = document.getElementById('charCount_6232bb43_q3');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function updateCharCount_6232bb43_q4() {
+    const textarea = document.getElementById('answer_6232bb43_q4');
+    const counter = document.getElementById('charCount_6232bb43_q4');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function updateCharCount_6232bb43_q5() {
+    const textarea = document.getElementById('answer_6232bb43_q5');
+    const counter = document.getElementById('charCount_6232bb43_q5');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function updateCharCount_6232bb43_q6() {
+    const textarea = document.getElementById('answer_6232bb43_q6');
+    const counter = document.getElementById('charCount_6232bb43_q6');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+// Shuffle questions if enabled
+function shuffleQuestions_6232bb43() {
+    const assessment = document.querySelector('[data-assessment-id="6232bb43"]');
+    const shouldShuffle = assessment.getAttribute('data-shuffle') === 'true';
+    
+    if (shouldShuffle) {
+        const questionsContainer = assessment;
+        const questions = Array.from(questionsContainer.querySelectorAll('[data-question-id]'));
+        const header = questionsContainer.querySelector('.assessment-header');
+        const buttons = questionsContainer.querySelector('.assessment-buttons');
+        const feedback = questionsContainer.querySelector('.assessment-feedback');
+        
+        // Fisher-Yates shuffle algorithm
+        for (let i = questions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [questions[i], questions[j]] = [questions[j], questions[i]];
+        }
+        
+        // Clear container and rebuild with shuffled order
+        questionsContainer.innerHTML = '';
+        questionsContainer.appendChild(header);
+        
+        // Re-number questions and append
+        questions.forEach((question, index) => {
+            const questionNumber = question.querySelector('.question-number');
+            if (questionNumber) {
+                questionNumber.textContent = (index + 1) + '.';
+            } else {
+                // Fallback for old h5 structure
+                const questionHeader = question.querySelector('.question-header h5');
+                if (questionHeader) {
+                    const originalText = questionHeader.textContent;
+                    const newText = originalText.replace(/^\d+\./, (index + 1) + '.');
+                    questionHeader.textContent = newText;
+                }
+            }
+            questionsContainer.appendChild(question);
+        });
+        
+        questionsContainer.appendChild(buttons);
+        questionsContainer.appendChild(feedback);
+    }
+}
+
+// Auto-load saved assessment answers
+document.addEventListener('DOMContentLoaded', function() {
+    // Shuffle questions first if enabled
+    shuffleQuestions_6232bb43();
+    
+    const savedAssessment = localStorage.getItem('freetext_assessment_6232bb43');
+    const isAssessmentSubmitted = localStorage.getItem('freetext_assessment_submitted_6232bb43');
+    
+    if (savedAssessment) {
+        const answers = JSON.parse(savedAssessment);
+        
+        if (answers['6232bb43_q1']) {
+            document.getElementById('answer_6232bb43_q1').value = answers['6232bb43_q1'];
+            updateCharCount_6232bb43_q1();
+        }
+
+        if (answers['6232bb43_q2']) {
+            document.getElementById('answer_6232bb43_q2').value = answers['6232bb43_q2'];
+            updateCharCount_6232bb43_q2();
+        }
+
+        if (answers['6232bb43_q3']) {
+            document.getElementById('answer_6232bb43_q3').value = answers['6232bb43_q3'];
+            updateCharCount_6232bb43_q3();
+        }
+
+        if (answers['6232bb43_q4']) {
+            document.getElementById('answer_6232bb43_q4').value = answers['6232bb43_q4'];
+            updateCharCount_6232bb43_q4();
+        }
+
+        if (answers['6232bb43_q5']) {
+            document.getElementById('answer_6232bb43_q5').value = answers['6232bb43_q5'];
+            updateCharCount_6232bb43_q5();
+        }
+
+        if (answers['6232bb43_q6']) {
+            document.getElementById('answer_6232bb43_q6').value = answers['6232bb43_q6'];
+            updateCharCount_6232bb43_q6();
+        }
+    }
+    
+    // Restore assessment button state if previously submitted
+    if (isAssessmentSubmitted === 'true') {
+        const submitBtn = document.querySelector('[data-assessment-id="6232bb43"] .submit-assessment-btn');
+        if (submitBtn) {
+            submitBtn.textContent = 'Submitted';
+            submitBtn.title = 'Click to resubmit';
+        }
+    }
+});
+
+
+function updateCharCount_036c2cf0() {
+    const textarea = document.getElementById('answer_036c2cf0');
+    const counter = document.getElementById('charCount_036c2cf0');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_036c2cf0() {
+    if (true) {
+        const answer = document.getElementById('answer_036c2cf0').value;
+        localStorage.setItem('freetext_answer_036c2cf0', answer);
+    }
+}
+
+function submitAnswer_036c2cf0() {
+    const answer = document.getElementById('answer_036c2cf0').value;
+    const feedback = document.getElementById('feedback_036c2cf0');
+    const submitBtn = document.querySelector('[data-question-id="036c2cf0"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>\"\"\"Paris is the capital of France</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_036c2cf0', 'true');
+    localStorage.setItem('freetext_answer_036c2cf0', answer);
+}
+
+function updateCharCount_9d4bd5b7() {
+    const textarea = document.getElementById('answer_9d4bd5b7');
+    const counter = document.getElementById('charCount_9d4bd5b7');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_9d4bd5b7() {
+    if (true) {
+        const answer = document.getElementById('answer_9d4bd5b7').value;
+        localStorage.setItem('freetext_answer_9d4bd5b7', answer);
+    }
+}
+
+function submitAnswer_9d4bd5b7() {
+    const answer = document.getElementById('answer_9d4bd5b7').value;
+    const feedback = document.getElementById('feedback_9d4bd5b7');
+    const submitBtn = document.querySelector('[data-question-id="9d4bd5b7"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>\"\"\"I know Python</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_9d4bd5b7', 'true');
+    localStorage.setItem('freetext_answer_9d4bd5b7', answer);
+}
+
+function updateCharCount_0ea31deb() {
+    const textarea = document.getElementById('answer_0ea31deb');
+    const counter = document.getElementById('charCount_0ea31deb');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_0ea31deb() {
+    if (true) {
+        const answer = document.getElementById('answer_0ea31deb').value;
+        localStorage.setItem('freetext_answer_0ea31deb', answer);
+    }
+}
+
+function submitAnswer_0ea31deb() {
+    const answer = document.getElementById('answer_0ea31deb').value;
+    const feedback = document.getElementById('feedback_0ea31deb');
+    const submitBtn = document.querySelector('[data-question-id="0ea31deb"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>\"\"\"Common sorting algorithms have different time complexities: Bubble Sort is O(n²) in worst case</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_0ea31deb', 'true');
+    localStorage.setItem('freetext_answer_0ea31deb', answer);
+}
+
+function updateCharCount_807f94bb() {
+    const textarea = document.getElementById('answer_807f94bb');
+    const counter = document.getElementById('charCount_807f94bb');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_807f94bb() {
+    if (true) {
+        const answer = document.getElementById('answer_807f94bb').value;
+        localStorage.setItem('freetext_answer_807f94bb', answer);
+    }
+}
+
+function submitAnswer_807f94bb() {
+    const answer = document.getElementById('answer_807f94bb').value;
+    const feedback = document.getElementById('feedback_807f94bb');
+    const submitBtn = document.querySelector('[data-question-id="807f94bb"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>This is a binary search algorithm that finds the position of a target value in a sorted array. Time complexity is O(log n) because it eliminates half the search space in each iteration. It\'s used when you need fast lookups in sorted data</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_807f94bb', 'true');
+    localStorage.setItem('freetext_answer_807f94bb', answer);
+}
+
+function updateCharCount_4736cff6() {
+    const textarea = document.getElementById('answer_4736cff6');
+    const counter = document.getElementById('charCount_4736cff6');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_4736cff6() {
+    if (true) {
+        const answer = document.getElementById('answer_4736cff6').value;
+        localStorage.setItem('freetext_answer_4736cff6', answer);
+    }
+}
+
+function submitAnswer_4736cff6() {
+    const answer = document.getElementById('answer_4736cff6').value;
+    const feedback = document.getElementById('feedback_4736cff6');
+    const submitBtn = document.querySelector('[data-question-id="4736cff6"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>Potential issues: 1) Single API Gateway bottleneck</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_4736cff6', 'true');
+    localStorage.setItem('freetext_answer_4736cff6', answer);
+}
+
+function updateCharCount_954da3eb() {
+    const textarea = document.getElementById('answer_954da3eb');
+    const counter = document.getElementById('charCount_954da3eb');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_954da3eb() {
+    if (true) {
+        const answer = document.getElementById('answer_954da3eb').value;
+        localStorage.setItem('freetext_answer_954da3eb', answer);
+    }
+}
+
+function submitAnswer_954da3eb() {
+    const answer = document.getElementById('answer_954da3eb').value;
+    const feedback = document.getElementById('feedback_954da3eb');
+    const submitBtn = document.querySelector('[data-question-id="954da3eb"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>1. In-order traversal (left</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_954da3eb', 'true');
+    localStorage.setItem('freetext_answer_954da3eb', answer);
+}
+
+function updateCharCount_99f4afb4() {
+    const textarea = document.getElementById('answer_99f4afb4');
+    const counter = document.getElementById('charCount_99f4afb4');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_99f4afb4() {
+    if (true) {
+        const answer = document.getElementById('answer_99f4afb4').value;
+        localStorage.setItem('freetext_answer_99f4afb4', answer);
+    }
+}
+
+function submitAnswer_99f4afb4() {
+    const answer = document.getElementById('answer_99f4afb4').value;
+    const feedback = document.getElementById('feedback_99f4afb4');
+    const submitBtn = document.querySelector('[data-question-id="99f4afb4"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>This is the Bubble Sort algorithm. It repeatedly steps through the list</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_99f4afb4', 'true');
+    localStorage.setItem('freetext_answer_99f4afb4', answer);
+}
+
+function updateCharCount_40372752() {
+    const textarea = document.getElementById('answer_40372752');
+    const counter = document.getElementById('charCount_40372752');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_40372752() {
+    if (true) {
+        const answer = document.getElementById('answer_40372752').value;
+        localStorage.setItem('freetext_answer_40372752', answer);
+    }
+}
+
+function submitAnswer_40372752() {
+    const answer = document.getElementById('answer_40372752').value;
+    const feedback = document.getElementById('feedback_40372752');
+    const submitBtn = document.querySelector('[data-question-id="40372752"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>All three demonstrate recursion - a function calling itself with a modified parameter. The concept relies on a base case (n &lt;= 1) to prevent infinite recursion. Potential risks include: stack overflow for large inputs</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_40372752', 'true');
+    localStorage.setItem('freetext_answer_40372752', answer);
+}
+
+function updateCharCount_b0e0bc26() {
+    const textarea = document.getElementById('answer_b0e0bc26');
+    const counter = document.getElementById('charCount_b0e0bc26');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_b0e0bc26() {
+    if (true) {
+        const answer = document.getElementById('answer_b0e0bc26').value;
+        localStorage.setItem('freetext_answer_b0e0bc26', answer);
+    }
+}
+
+function submitAnswer_b0e0bc26() {
+    const answer = document.getElementById('answer_b0e0bc26').value;
+    const feedback = document.getElementById('feedback_b0e0bc26');
+    const submitBtn = document.querySelector('[data-question-id="b0e0bc26"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>No sample answer provided.</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_b0e0bc26', 'true');
+    localStorage.setItem('freetext_answer_b0e0bc26', answer);
+}
+
+function updateCharCount_e8e81934() {
+    const textarea = document.getElementById('answer_e8e81934');
+    const counter = document.getElementById('charCount_e8e81934');
+    if (counter) {
+        counter.textContent = textarea.value.length + ' characters';
+    }
+}
+
+function autoSave_e8e81934() {
+    if (true) {
+        const answer = document.getElementById('answer_e8e81934').value;
+        localStorage.setItem('freetext_answer_e8e81934', answer);
+    }
+}
+
+function submitAnswer_e8e81934() {
+    const answer = document.getElementById('answer_e8e81934').value;
+    const feedback = document.getElementById('feedback_e8e81934');
+    const submitBtn = document.querySelector('[data-question-id="e8e81934"] .submit-btn');
+    
+    if (answer.trim() === '') {
+        feedback.innerHTML = '<div class="warning">Please enter an answer before submitting.</div>';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    // Update button text and add tooltip
+    submitBtn.textContent = 'Submitted';
+    submitBtn.title = 'Click to resubmit';
+    
+    // Only show sample answer if show_answer is enabled, no success message
+    if (true) {
+        feedback.innerHTML = '<div class="answer-display"><strong>Sample Answer:</strong><br>A typical architecture would include: 1) React/Vue frontend for user interface</div>';
+        feedback.style.display = 'block';
+    } else {
+        // Hide feedback if no sample answer to show
+        feedback.style.display = 'none';
+    }
+    
+    // Save submission
+    localStorage.setItem('freetext_submitted_e8e81934', 'true');
+    localStorage.setItem('freetext_answer_e8e81934', answer);
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize question 036c2cf0
+        const savedAnswer_036c2cf0 = localStorage.getItem('freetext_answer_036c2cf0');
+        const isSubmitted_036c2cf0 = localStorage.getItem('freetext_submitted_036c2cf0');
+        if (savedAnswer_036c2cf0) {
+            const textarea_036c2cf0 = document.getElementById('answer_036c2cf0');
+            if (textarea_036c2cf0) {
+                textarea_036c2cf0.value = savedAnswer_036c2cf0;
+                updateCharCount_036c2cf0();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_036c2cf0 === 'true') {
+            const submitBtn_036c2cf0 = document.querySelector('[data-question-id="036c2cf0"] .submit-btn');
+            if (submitBtn_036c2cf0) {
+                submitBtn_036c2cf0.textContent = 'Submitted';
+                submitBtn_036c2cf0.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question 9d4bd5b7
+        const savedAnswer_9d4bd5b7 = localStorage.getItem('freetext_answer_9d4bd5b7');
+        const isSubmitted_9d4bd5b7 = localStorage.getItem('freetext_submitted_9d4bd5b7');
+        if (savedAnswer_9d4bd5b7) {
+            const textarea_9d4bd5b7 = document.getElementById('answer_9d4bd5b7');
+            if (textarea_9d4bd5b7) {
+                textarea_9d4bd5b7.value = savedAnswer_9d4bd5b7;
+                updateCharCount_9d4bd5b7();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_9d4bd5b7 === 'true') {
+            const submitBtn_9d4bd5b7 = document.querySelector('[data-question-id="9d4bd5b7"] .submit-btn');
+            if (submitBtn_9d4bd5b7) {
+                submitBtn_9d4bd5b7.textContent = 'Submitted';
+                submitBtn_9d4bd5b7.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question 0ea31deb
+        const savedAnswer_0ea31deb = localStorage.getItem('freetext_answer_0ea31deb');
+        const isSubmitted_0ea31deb = localStorage.getItem('freetext_submitted_0ea31deb');
+        if (savedAnswer_0ea31deb) {
+            const textarea_0ea31deb = document.getElementById('answer_0ea31deb');
+            if (textarea_0ea31deb) {
+                textarea_0ea31deb.value = savedAnswer_0ea31deb;
+                updateCharCount_0ea31deb();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_0ea31deb === 'true') {
+            const submitBtn_0ea31deb = document.querySelector('[data-question-id="0ea31deb"] .submit-btn');
+            if (submitBtn_0ea31deb) {
+                submitBtn_0ea31deb.textContent = 'Submitted';
+                submitBtn_0ea31deb.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question 807f94bb
+        const savedAnswer_807f94bb = localStorage.getItem('freetext_answer_807f94bb');
+        const isSubmitted_807f94bb = localStorage.getItem('freetext_submitted_807f94bb');
+        if (savedAnswer_807f94bb) {
+            const textarea_807f94bb = document.getElementById('answer_807f94bb');
+            if (textarea_807f94bb) {
+                textarea_807f94bb.value = savedAnswer_807f94bb;
+                updateCharCount_807f94bb();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_807f94bb === 'true') {
+            const submitBtn_807f94bb = document.querySelector('[data-question-id="807f94bb"] .submit-btn');
+            if (submitBtn_807f94bb) {
+                submitBtn_807f94bb.textContent = 'Submitted';
+                submitBtn_807f94bb.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question 4736cff6
+        const savedAnswer_4736cff6 = localStorage.getItem('freetext_answer_4736cff6');
+        const isSubmitted_4736cff6 = localStorage.getItem('freetext_submitted_4736cff6');
+        if (savedAnswer_4736cff6) {
+            const textarea_4736cff6 = document.getElementById('answer_4736cff6');
+            if (textarea_4736cff6) {
+                textarea_4736cff6.value = savedAnswer_4736cff6;
+                updateCharCount_4736cff6();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_4736cff6 === 'true') {
+            const submitBtn_4736cff6 = document.querySelector('[data-question-id="4736cff6"] .submit-btn');
+            if (submitBtn_4736cff6) {
+                submitBtn_4736cff6.textContent = 'Submitted';
+                submitBtn_4736cff6.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question 954da3eb
+        const savedAnswer_954da3eb = localStorage.getItem('freetext_answer_954da3eb');
+        const isSubmitted_954da3eb = localStorage.getItem('freetext_submitted_954da3eb');
+        if (savedAnswer_954da3eb) {
+            const textarea_954da3eb = document.getElementById('answer_954da3eb');
+            if (textarea_954da3eb) {
+                textarea_954da3eb.value = savedAnswer_954da3eb;
+                updateCharCount_954da3eb();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_954da3eb === 'true') {
+            const submitBtn_954da3eb = document.querySelector('[data-question-id="954da3eb"] .submit-btn');
+            if (submitBtn_954da3eb) {
+                submitBtn_954da3eb.textContent = 'Submitted';
+                submitBtn_954da3eb.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question 99f4afb4
+        const savedAnswer_99f4afb4 = localStorage.getItem('freetext_answer_99f4afb4');
+        const isSubmitted_99f4afb4 = localStorage.getItem('freetext_submitted_99f4afb4');
+        if (savedAnswer_99f4afb4) {
+            const textarea_99f4afb4 = document.getElementById('answer_99f4afb4');
+            if (textarea_99f4afb4) {
+                textarea_99f4afb4.value = savedAnswer_99f4afb4;
+                updateCharCount_99f4afb4();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_99f4afb4 === 'true') {
+            const submitBtn_99f4afb4 = document.querySelector('[data-question-id="99f4afb4"] .submit-btn');
+            if (submitBtn_99f4afb4) {
+                submitBtn_99f4afb4.textContent = 'Submitted';
+                submitBtn_99f4afb4.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question 40372752
+        const savedAnswer_40372752 = localStorage.getItem('freetext_answer_40372752');
+        const isSubmitted_40372752 = localStorage.getItem('freetext_submitted_40372752');
+        if (savedAnswer_40372752) {
+            const textarea_40372752 = document.getElementById('answer_40372752');
+            if (textarea_40372752) {
+                textarea_40372752.value = savedAnswer_40372752;
+                updateCharCount_40372752();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_40372752 === 'true') {
+            const submitBtn_40372752 = document.querySelector('[data-question-id="40372752"] .submit-btn');
+            if (submitBtn_40372752) {
+                submitBtn_40372752.textContent = 'Submitted';
+                submitBtn_40372752.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question b0e0bc26
+        const savedAnswer_b0e0bc26 = localStorage.getItem('freetext_answer_b0e0bc26');
+        const isSubmitted_b0e0bc26 = localStorage.getItem('freetext_submitted_b0e0bc26');
+        if (savedAnswer_b0e0bc26) {
+            const textarea_b0e0bc26 = document.getElementById('answer_b0e0bc26');
+            if (textarea_b0e0bc26) {
+                textarea_b0e0bc26.value = savedAnswer_b0e0bc26;
+                updateCharCount_b0e0bc26();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_b0e0bc26 === 'true') {
+            const submitBtn_b0e0bc26 = document.querySelector('[data-question-id="b0e0bc26"] .submit-btn');
+            if (submitBtn_b0e0bc26) {
+                submitBtn_b0e0bc26.textContent = 'Submitted';
+                submitBtn_b0e0bc26.title = 'Click to resubmit';
+            }
+        }
+    // Initialize question e8e81934
+        const savedAnswer_e8e81934 = localStorage.getItem('freetext_answer_e8e81934');
+        const isSubmitted_e8e81934 = localStorage.getItem('freetext_submitted_e8e81934');
+        if (savedAnswer_e8e81934) {
+            const textarea_e8e81934 = document.getElementById('answer_e8e81934');
+            if (textarea_e8e81934) {
+                textarea_e8e81934.value = savedAnswer_e8e81934;
+                updateCharCount_e8e81934();
+            }
+        }
+        // Restore button state if previously submitted
+        if (isSubmitted_e8e81934 === 'true') {
+            const submitBtn_e8e81934 = document.querySelector('[data-question-id="e8e81934"] .submit-btn');
+            if (submitBtn_e8e81934) {
+                submitBtn_e8e81934.textContent = 'Submitted';
+                submitBtn_e8e81934.title = 'Click to resubmit';
+            }
+        }
+});
+</script>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive MkDocs plugin for adding interactive free-text questions and assessments">
+      
+      
+        <meta name="author" content="Drew Kearsey">
+      
+      
+        <link rel="canonical" href="https://d-kearsey.github.io/mkdocs-freetext/demo/">
+      
+      
+        <link rel="prev" href="../installation/">
+      
+      
+        <link rel="next" href="../configuration/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Live Demo - MkDocs Free-Text Questions Plugin</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  
+<style>
+/* Freetext Plugin Styles with Material Theme Support */
+.freetext-question, .freetext-assessment {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: var(--md-code-bg-color, #f5f5f5);
+    border: 1px solid var(--md-default-fg-color--lighter, #e1e4e8);
+    border-radius: 8px;
+    color: var(--md-default-fg-color, #333333);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+.question-header, .assessment-header {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.question-header h4, .question-header h5, .assessment-header h3, .question-text {
+    margin: 0;
+    color: var(--md-default-fg-color, #333333) !important;
+    font-weight: 600;
+    font-size: 1.1em;
+    line-height: 1.4;
+    flex: 1;
+    text-transform: none !important;
+}
+
+.question-text {
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.question-text p {
+    margin: 0 0 10px 0;
+}
+
+.question-text p:last-child {
+    margin-bottom: 0;
+}
+
+.question-text img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.question-text a {
+    color: var(--md-primary-fg-color, #0366d6) !important;
+    text-decoration: none;
+}
+
+.question-text a:hover {
+    text-decoration: underline;
+}
+
+.question-text pre {
+    background-color: var(--md-code-bg-color, #ffffff);
+    border: 1px solid var(--md-default-fg-color--lighter, #e1e4e8);
+    border-radius: 4px;
+    padding: 12px;
+    margin: 10px 0;
+    overflow-x: auto;
+    font-size: 0.9em;
+}
+
+.question-text code {
+    background-color: var(--md-code-bg-color, #ffffff);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    border: 1px solid var(--md-default-fg-color--lighter, #e1e4e8);
+}
+
+.question-text .mermaid {
+    text-align: center;
+    margin: 15px 0;
+    background-color: var(--md-default-bg-color, #ffffff);
+    border: 1px solid var(--md-default-fg-color--lighter, #e1e4e8);
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.question-number {
+    font-weight: 600;
+    margin-right: 8px;
+    color: var(--md-default-fg-color, #333333);
+}
+
+.marks, .total-marks {
+    background-color: var(--md-primary-fg-color, #0366d6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.answer-section {
+    margin: 15px 0;
+}
+
+.freetext-question textarea, .assessment-question textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--md-default-fg-color--lighter, #d1d5da);
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+    font-family: inherit;
+    background-color: var(--md-default-bg-color, #ffffff);
+    color: var(--md-default-fg-color, #333333);
+    box-sizing: border-box;
+    min-height: 80px;
+}
+
+.freetext-question textarea:focus, .assessment-question textarea:focus {
+    outline: none;
+    border-color: var(--md-primary-fg-color, #0366d6);
+}
+
+.char-count {
+    text-align: right;
+    font-size: 12px;
+    color: var(--md-default-fg-color--light, #666666);
+    margin-top: 5px;
+}
+
+.button-group, .assessment-buttons {
+    margin-top: 15px;
+}
+
+.submit-btn, .submit-assessment-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: var(--md-primary-fg-color, #0366d6);
+    color: white;
+}
+
+.submit-btn:hover, .submit-assessment-btn:hover {
+    background-color: var(--md-primary-fg-color--dark, #0256cc);
+}
+
+.feedback, .assessment-feedback {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 4px;
+}
+
+.feedback .success, .assessment-feedback .success {
+    background-color: var(--md-typeset-color, #d4edda);
+    border: 1px solid var(--md-typeset-color, #c3e6cb);
+    color: var(--md-typeset-color, #155724);
+}
+
+.feedback .warning, .assessment-feedback .warning {
+    background-color: var(--md-code-bg-color, #fff3cd);
+    border: 1px solid var(--md-default-fg-color--lighter, #ffeaa7);
+    color: var(--md-default-fg-color, #856404);
+}
+
+.feedback .answer-display {
+    background-color: var(--md-code-bg-color, #e2f3ff);
+    border: 1px solid var(--md-primary-fg-color--light, #b6dbff);
+    color: var(--md-primary-fg-color, #0366d6);
+    margin-top: 10px;
+}
+
+.assessment-question {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: var(--md-code-bg-color, #f5f5f5);
+    border-radius: 6px;
+    color: var(--md-default-fg-color, #333333);
+}
+
+.assessment-header h3 {
+    font-size: 1.2em;
+    margin: 0;
+    color: var(--md-default-fg-color, #333333) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .freetext-question, .freetext-assessment {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .question-header, .assessment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+</style>
+
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#live-demo" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="MkDocs Free-Text Questions Plugin" class="md-header__button md-logo" aria-label="MkDocs Free-Text Questions Plugin" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MkDocs Free-Text Questions Plugin
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Live Demo
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/D-Kearsey/mkdocs-freetext" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    D-Kearsey/mkdocs-freetext
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="MkDocs Free-Text Questions Plugin" class="md-nav__button md-logo" aria-label="MkDocs Free-Text Questions Plugin" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    MkDocs Free-Text Questions Plugin
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/D-Kearsey/mkdocs-freetext" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    D-Kearsey/mkdocs-freetext
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Live Demo
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Live Demo
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Question
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triple-quote-support-for-complex-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triple Quote Support for Complex Answers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#question-with-code-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question with Code Block
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mermaid-diagram-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mermaid Diagram Question
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visual-learning-with-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visual Learning with Images
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#algorithm-flowchart-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm Flowchart Question
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-language-code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Language Code Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#character-counter-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Character Counter Demo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#long-form-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      Long-Form Question
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Question
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triple-quote-support-for-complex-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triple Quote Support for Complex Answers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#question-with-code-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question with Code Block
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mermaid-diagram-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mermaid Diagram Question
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visual-learning-with-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visual Learning with Images
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#algorithm-flowchart-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm Flowchart Question
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-language-code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Language Code Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#character-counter-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Character Counter Demo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#long-form-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      Long-Form Question
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="live-demo">Live Demo</h1>
+<p>Experience the MkDocs Free-Text Questions Plugin in action! All examples below are <strong>fully interactive</strong> - try typing in the answer boxes, toggling sample answers, and exploring the features.</p>
+<div class="admonition tip">
+<p class="admonition-title">Interactive Examples</p>
+<p>All questions on this page are live and functional. Your answers are automatically saved in your browser's local storage.</p>
+</div>
+<h2 id="basic-question">Basic Question</h2>
+<p>Try answering this simple question using our modern syntax:</p>
+
+<div class="freetext-question" data-question-id="036c2cf0">
+    <div class="question-header">
+        <div class="question-text"><p>What is the capital of France?</p></div>
+        <span class="marks">(2 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_036c2cf0" 
+            rows="3" 
+            placeholder="Enter your answer here..."
+            oninput="updateCharCount_036c2cf0(); autoSave_036c2cf0();"
+        ></textarea>
+        <div id="charCount_036c2cf0" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_036c2cf0()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_036c2cf0" class="feedback" style="display: none;"></div>
+</div>
+
+<h2 id="triple-quote-support-for-complex-answers">Triple Quote Support for Complex Answers</h2>
+<p>The plugin now supports <strong>triple quotes</strong> (<code>"""</code>) to handle answers containing commas, quotes, and complex punctuation:</p>
+
+<div class="freetext-question" data-question-id="9d4bd5b7">
+    <div class="question-header">
+        <div class="question-text"><p>List the programming languages you know and explain their primary use cases.</p></div>
+        <span class="marks">(5 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_9d4bd5b7" 
+            rows="3" 
+            placeholder="Enter your answer..."
+            oninput="updateCharCount_9d4bd5b7(); autoSave_9d4bd5b7();"
+        ></textarea>
+        <div id="charCount_9d4bd5b7" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_9d4bd5b7()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_9d4bd5b7" class="feedback" style="display: none;"></div>
+</div>
+
+
+<div class="freetext-question" data-question-id="0ea31deb">
+    <div class="question-header">
+        <div class="question-text"><p>Explain the time complexity of common sorting algorithms.</p></div>
+        <span class="marks">(8 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_0ea31deb" 
+            rows="3" 
+            placeholder="Discuss Big O notation and algorithm performance..."
+            oninput="updateCharCount_0ea31deb(); autoSave_0ea31deb();"
+        ></textarea>
+        <div id="charCount_0ea31deb" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_0ea31deb()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_0ea31deb" class="feedback" style="display: none;"></div>
+</div>
+
+<h2 id="question-with-code-block">Question with Code Block</h2>
+<p>This example shows how questions can include syntax-highlighted code blocks:</p>
+
+<div class="freetext-question" data-question-id="807f94bb">
+    <div class="question-header">
+        <div class="question-text"><p>Analyze the following Python function and explain what it does:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span> <span class="nf">binary_search</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="k">if</span> <span class="n">arr</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>            <span class="k">return</span> <span class="n">mid</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="k">elif</span> <span class="n">arr</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>            <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</span></code></pre></div>
+<p>What is the time complexity and when would you use this algorithm?</p></div>
+        <span class="marks">(5 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_807f94bb" 
+            rows="3" 
+            placeholder="Explain the algorithm"
+            oninput="updateCharCount_807f94bb(); autoSave_807f94bb();"
+        ></textarea>
+        <div id="charCount_807f94bb" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_807f94bb()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_807f94bb" class="feedback" style="display: none;"></div>
+</div>
+
+<h2 id="mermaid-diagram-question">Mermaid Diagram Question</h2>
+<p>See how the plugin handles interactive Mermaid diagrams within questions:</p>
+
+<div class="freetext-question" data-question-id="4736cff6">
+    <div class="question-header">
+        <div class="question-text"><p>Based on this microservices architecture diagram, identify potential issues and suggest improvements:</p>
+<pre class="mermaid"><code>graph TD
+    A[Frontend App] --&gt; B[API Gateway]
+    B --&gt; C[User Service]
+    B --&gt; D[Order Service]
+    B --&gt; E[Payment Service]
+    C --&gt; F[(User DB)]
+    D --&gt; G[(Order DB)]
+    E --&gt; H[(Payment DB)]
+    D --&gt; I[Email Service]
+    E --&gt; I
+    I --&gt; J[External Email API]</code></pre>
+<p>Consider scalability, reliability, and security aspects.</p></div>
+        <span class="marks">(12 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_4736cff6" 
+            rows="3" 
+            placeholder="Analyze the architecture and suggest improvements..."
+            oninput="updateCharCount_4736cff6(); autoSave_4736cff6();"
+        ></textarea>
+        <div id="charCount_4736cff6" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_4736cff6()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_4736cff6" class="feedback" style="display: none;"></div>
+</div>
+
+<h2 id="visual-learning-with-images">Visual Learning with Images</h2>
+<p>Questions can include educational images and diagrams:</p>
+
+<div class="freetext-question" data-question-id="954da3eb">
+    <div class="question-header">
+        <div class="question-text"><p>Examine this data structure visualization and answer the following:</p>
+<p><img alt="Binary Tree Structure" src="https://via.placeholder.com/500x300/4CAF50/FFFFFF?text=Binary+Tree%0A%0A%20%20%20%20%20%20%2010%0A%20%20%20%20%2F%20%20%20%20%5C%0A%20%20%205%20%20%20%20%20%20%2015%0A%20%2F%20%5C%20%20%20%20%20%2F%20%20%5C%0A%203%20%20%207%20%20%2012%20%2018" /></p>
+<ol>
+<li>What type of tree traversal would visit nodes in the order: 3, 5, 7, 10, 12, 15, 18?</li>
+<li>What is the height of this tree?</li>
+<li>Is this a valid Binary Search Tree?</li>
+</ol></div>
+        <span class="marks">(8 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_954da3eb" 
+            rows="3" 
+            placeholder="Answer all three questions about the binary tree..."
+            oninput="updateCharCount_954da3eb(); autoSave_954da3eb();"
+        ></textarea>
+        <div id="charCount_954da3eb" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_954da3eb()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_954da3eb" class="feedback" style="display: none;"></div>
+</div>
+
+<h2 id="algorithm-flowchart-question">Algorithm Flowchart Question</h2>
+<p>Questions can include flowcharts to visualize algorithms and processes:</p>
+
+<div class="freetext-question" data-question-id="99f4afb4">
+    <div class="question-header">
+        <div class="question-text"><p>Study this algorithm flowchart and explain what sorting algorithm it represents:</p>
+<pre class="mermaid"><code>flowchart TD
+    A[Start: Array of n elements] --&gt; B[i = 0]
+    B --&gt; C{i &lt; n-1?}
+    C --&gt;|No| Z[End: Array sorted]
+    C --&gt;|Yes| D[j = 0]
+    D --&gt; E{j &lt; n-i-1?}
+    E --&gt;|No| F[i = i + 1]
+    F --&gt; C
+    E --&gt;|Yes| G{arr[j] &gt; arr[j+1]?}
+    G --&gt;|No| H[j = j + 1]
+    G --&gt;|Yes| I[Swap arr[j] and arr[j+1]]
+    I --&gt; H
+    H --&gt; E</code></pre>
+<p>What is the name of this algorithm and what are its time complexities for best, average, and worst cases?</p></div>
+        <span class="marks">(10 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_99f4afb4" 
+            rows="3" 
+            placeholder="Identify the algorithm and analyze its complexity..."
+            oninput="updateCharCount_99f4afb4(); autoSave_99f4afb4();"
+        ></textarea>
+        <div id="charCount_99f4afb4" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_99f4afb4()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_99f4afb4" class="feedback" style="display: none;"></div>
+</div>
+
+<h2 id="multi-language-code-example">Multi-Language Code Example</h2>
+<p>Demonstrate code syntax highlighting across different programming languages:</p>
+
+<div class="freetext-question" data-question-id="40372752">
+    <div class="question-header">
+        <div class="question-text"><p>Compare these three implementations of the same function in different languages:</p>
+<p><strong>Python:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>JavaScript:</strong></p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">factorial</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">factorial</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Java:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">factorial</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">factorial</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>What programming concept do all three implementations demonstrate, and what are the potential risks?</p></div>
+        <span class="marks">(7 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_40372752" 
+            rows="3" 
+            placeholder="Identify the concept and discuss potential issues..."
+            oninput="updateCharCount_40372752(); autoSave_40372752();"
+        ></textarea>
+        <div id="charCount_40372752" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_40372752()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_40372752" class="feedback" style="display: none;"></div>
+</div>
+
+<p>The plugin supports comprehensive assessments with multiple questions:</p>
+
+<div class="freetext-assessment" data-assessment-id="6232bb43" data-shuffle="false">
+    <div class="assessment-header">
+        <h3>Assessment</h3>
+        
+    </div>
+    
+    
+<div class="assessment-question" data-question-id="6232bb43_q1">
+    <div class="question-header">
+        <div class="question-number">1.</div>
+        <div class="question-text"><p>title: Python Fundamentals Assessment
+shuffle: true</p>
+<p>What is a variable in Python and how do you create one?</p></div>
+        
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_6232bb43_q1" 
+            rows="3" 
+            placeholder="Enter your answer..."
+            oninput="updateCharCount_6232bb43_q1(); autoSaveAssessment_6232bb43();"
+        ></textarea>
+        <div id="charCount_6232bb43_q1" class="char-count">0 characters</div>
+    </div>
+    
+    <div id="feedback_6232bb43_q1" class="feedback" style="display: none;"></div>
+</div>
+
+<div class="assessment-question" data-question-id="6232bb43_q2">
+    <div class="question-header">
+        <div class="question-number">2.</div>
+        <div class="question-text"><p>marks: 3,
+placeholder: Describe variables and their creation...,
+show_answer: true,
+answer: A variable in Python is a name that refers to a value stored in memory. You create one by simply assigning a value: <code>x = 5</code> or <code>name = "Hello"</code>. Python is dynamically typed, so you don't need to declare the type.</p></div>
+        
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_6232bb43_q2" 
+            rows="3" 
+            placeholder="Enter your answer..."
+            oninput="updateCharCount_6232bb43_q2(); autoSaveAssessment_6232bb43();"
+        ></textarea>
+        <div id="charCount_6232bb43_q2" class="char-count">0 characters</div>
+    </div>
+    
+    <div id="feedback_6232bb43_q2" class="feedback" style="display: none;"></div>
+</div>
+
+<div class="assessment-question" data-question-id="6232bb43_q3">
+    <div class="question-header">
+        <div class="question-number">3.</div>
+        <div class="question-text"><p>Explain the difference between a list and a tuple in Python.</p></div>
+        
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_6232bb43_q3" 
+            rows="3" 
+            placeholder="Enter your answer..."
+            oninput="updateCharCount_6232bb43_q3(); autoSaveAssessment_6232bb43();"
+        ></textarea>
+        <div id="charCount_6232bb43_q3" class="char-count">0 characters</div>
+    </div>
+    
+    <div id="feedback_6232bb43_q3" class="feedback" style="display: none;"></div>
+</div>
+
+<div class="assessment-question" data-question-id="6232bb43_q4">
+    <div class="question-header">
+        <div class="question-number">4.</div>
+        <div class="question-text"><p>marks: 5,
+placeholder: Compare lists and tuples...,
+show_answer: true,
+answer: Lists are mutable (can be changed after creation) and use square brackets: <code>[1,2,3]</code>. Tuples are immutable (cannot be changed) and use parentheses: <code>(1,2,3)</code>. Lists are better for collections that may change, tuples for fixed data.</p></div>
+        
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_6232bb43_q4" 
+            rows="3" 
+            placeholder="Enter your answer..."
+            oninput="updateCharCount_6232bb43_q4(); autoSaveAssessment_6232bb43();"
+        ></textarea>
+        <div id="charCount_6232bb43_q4" class="char-count">0 characters</div>
+    </div>
+    
+    <div id="feedback_6232bb43_q4" class="feedback" style="display: none;"></div>
+</div>
+
+<div class="assessment-question" data-question-id="6232bb43_q5">
+    <div class="question-header">
+        <div class="question-number">5.</div>
+        <div class="question-text"><p>What is a function in Python? Write a simple example.</p></div>
+        
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_6232bb43_q5" 
+            rows="3" 
+            placeholder="Enter your answer..."
+            oninput="updateCharCount_6232bb43_q5(); autoSaveAssessment_6232bb43();"
+        ></textarea>
+        <div id="charCount_6232bb43_q5" class="char-count">0 characters</div>
+    </div>
+    
+    <div id="feedback_6232bb43_q5" class="feedback" style="display: none;"></div>
+</div>
+
+<div class="assessment-question" data-question-id="6232bb43_q6">
+    <div class="question-header">
+        <div class="question-number">6.</div>
+        <div class="question-text"><p>marks: 4,
+placeholder: Define functions and provide an example...,
+show_answer: true,
+answer: A function is a reusable block of code that performs a specific task. Example: <code>def greet(name): return f"Hello, {name}!"</code> - This function takes a name parameter and returns a greeting string.</p></div>
+        
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_6232bb43_q6" 
+            rows="3" 
+            placeholder="Enter your answer..."
+            oninput="updateCharCount_6232bb43_q6(); autoSaveAssessment_6232bb43();"
+        ></textarea>
+        <div id="charCount_6232bb43_q6" class="char-count">0 characters</div>
+    </div>
+    
+    <div id="feedback_6232bb43_q6" class="feedback" style="display: none;"></div>
+</div>
+
+    
+    <div class="assessment-buttons">
+        <button onclick="submitAssessment_6232bb43()" class="submit-assessment-btn">Submit Assessment</button>
+    </div>
+    
+    <div id="assessment_feedback_6232bb43" class="assessment-feedback" style="display: none;"></div>
+</div>
+
+<h2 id="character-counter-demo">Character Counter Demo</h2>
+<p>Notice the character counter in the bottom-right of text areas (can be disabled):</p>
+
+<div class="freetext-question" data-question-id="b0e0bc26">
+    <div class="question-header">
+        <div class="question-text"><p>Write a short paragraph (aim for 100-200 characters) explaining your favourite programming language and why you enjoy using it.</p></div>
+        <span class="marks">(3 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_b0e0bc26" 
+            rows="3" 
+            placeholder="Write about your favourite programming language..."
+            oninput="updateCharCount_b0e0bc26(); autoSave_b0e0bc26();"
+        ></textarea>
+        <div id="charCount_b0e0bc26" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_b0e0bc26()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_b0e0bc26" class="feedback" style="display: none;"></div>
+</div>
+
+<h2 id="long-form-question">Long-Form Question</h2>
+<p>Perfect for essays and detailed responses:</p>
+
+<div class="freetext-question" data-question-id="e8e81934">
+    <div class="question-header">
+        <div class="question-text"><p>Design a simple web application architecture for an online bookstore. Include the following components and explain how they interact:</p>
+<ul>
+<li>Frontend (user interface)</li>
+<li>Backend API</li>
+<li>Database</li>
+<li>Payment processing</li>
+<li>Inventory management</li>
+</ul>
+<p>Draw a simple diagram or describe the data flow between components.</p></div>
+        <span class="marks">(15 marks)</span>
+    </div>
+    
+    <div class="answer-section">
+        <textarea 
+            id="answer_e8e81934" 
+            rows="6" 
+            placeholder="Describe your bookstore architecture design in detail..."
+            oninput="updateCharCount_e8e81934(); autoSave_e8e81934();"
+        ></textarea>
+        <div id="charCount_e8e81934" class="char-count">0 characters</div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="submitAnswer_e8e81934()" class="submit-btn">Submit Answer</button>
+    </div>
+    
+    <div id="feedback_e8e81934" class="feedback" style="display: none;"></div>
+</div>
+
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "content.code.copy"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

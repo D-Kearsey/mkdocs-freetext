@@ -1,0 +1,2 @@
+[mkdocs.plugins]
+freetext = mkdocs_freetext.plugin:FreetextPlugin

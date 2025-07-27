@@ -13,6 +13,7 @@ A comprehensive MkDocs plugin for adding interactive free-text input questions a
 - **Question Shuffling**: Optional randomization of assessment question order
 - **Character Counting**: Optional character counter for text inputs
 - **Sample Answers**: Show/hide sample answers for learning reinforcement
+- **Clean Separation**: Use `---` separator to cleanly separate question content from configuration
 
 ## 🚀 Quick Start
 
@@ -35,11 +36,60 @@ plugins:
 
 ```markdown
 !!! freetext
-    question: What is the capital of France?
-    placeholder: Enter your answer here...
+    What is the capital of France?
+    
+    ---
     marks: 2
+    placeholder: Enter your answer here...
     show_answer: true
     answer: Paris is the capital of France.
+```
+
+### Rich Content Question Example
+
+```markdown
+!!! freetext
+    Analyze this code and explain what it does:
+    
+    ```python
+    def fibonacci(n):
+        if n <= 1:
+            return n
+        return fibonacci(n-1) + fibonacci(n-2)
+    ```
+    
+    What is the time complexity of this algorithm?
+    
+    ---
+    marks: 10
+    type: long
+    rows: 6
+    placeholder: Explain the algorithm and its complexity...
+```
+
+### Question with Images and Diagrams
+
+```markdown
+!!! freetext
+    Study the system architecture below:
+    
+    ![System Architecture](images/architecture.png)
+    
+    ```mermaid
+    graph TD
+        A[Client] --> B[Load Balancer]
+        B --> C[Web Server 1]
+        B --> D[Web Server 2]
+        C --> E[Database]
+        D --> E
+    ```
+    
+    How would you scale this system to handle 10x more traffic?
+    
+    ---
+    marks: 15
+    type: long
+    rows: 8
 ```
 
 ### Assessment Example
@@ -62,12 +112,7 @@ plugins:
 
 ## 📖 Documentation
 
-- **[Configuration Reference](docs/configuration.md)** - All available options
-- **[Question Syntax](docs/question-syntax.md)** - How to create questions
-- **[Assessment Syntax](docs/assessment-syntax.md)** - How to create assessments
-- **[Rich Content](docs/rich-content.md)** - Using diagrams, code, and images
-- **[Theming](docs/theming.md)** - Customizing appearance
-- **[Examples](docs/examples.md)** - Real-world usage examples
+Visit our **[comprehensive documentation](https://d-kearsey.github.io/mkdocs-freetext/)** with live interactive demos, complete installation guide, and examples you can copy-paste.
 
 ## 🎨 Material Theme Integration
 
@@ -136,9 +181,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- [PyPI Package](https://pypi.org/project/mkdocs-freetext/)
+- [PyPI Package](https://pypi.org/project/mkdocs-freetext/) (Available after publishing)
+- [📖 Documentation & Live Demo](https://d-kearsey.github.io/mkdocs-freetext/)
 - [GitHub Repository](https://github.com/D-Kearsey/mkdocs-freetext)
-- [Documentation](https://d-kearsey.github.io/mkdocs-freetext/)
 - [Issue Tracker](https://github.com/D-Kearsey/mkdocs-freetext/issues)
 
 ## 🏆 Why Choose MkDocs Free-Text?
