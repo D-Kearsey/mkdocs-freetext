@@ -11,9 +11,9 @@ A comprehensive MkDocs plugin for adding **interactive free-text questions and a
 - **🎯 Interactive Questions**: Add free-text input questions directly to your documentation
 - **📝 Multi-Question Assessments**: Create comprehensive assessments with multiple questions  
 - **🎨 Rich Content Support**: Questions support Mermaid diagrams, code blocks, images, and markdown
-- **🌓 Material Theme Integration**: Seamless integration with automatic dark/light mode support
-- **💾 Persistent Storage**: Auto-saves user answers in browser localStorage
-- **🔀 Question Shuffling**: Optional randomization of assessment question order
+- **� Modern Syntax**: Clean `---` separator with comma-separated configuration (v1.1.0+)
+- **�🌓 Material Theme Integration**: Seamless integration with automatic dark/light mode support
+- ** Question Shuffling**: Optional randomization of assessment question order
 - **📊 Character Counting**: Optional character counter for text inputs
 - **💡 Sample Answers**: Show/hide sample answers for learning reinforcement
 
@@ -34,18 +34,13 @@ plugins:
   - freetext
 ```
 
-### Your First Question
+### Your First Question (New Syntax)
 
 ```markdown
 !!! freetext
     What is the capital of France?
-    
     ---
-    
-    placeholder: Enter your answer here...
-    marks: 2
-    show_answer: true
-    answer: Paris is the capital of France.
+    placeholder: Enter your answer here..., marks: 2, show_answer: true, answer: Paris is the capital of France.
 ```
 
 ## 📖 Navigation

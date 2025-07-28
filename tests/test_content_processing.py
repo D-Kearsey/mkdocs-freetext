@@ -54,18 +54,13 @@ def test_placeholder_config_separation():
     mock_file = type('MockFile', (), {'src_path': 'test.md'})()
     mock_page = type('MockPage', (), {'file': mock_file})()
     
-    # Test new --- separator syntax
+    # Test new --- separator syntax with comma-separated config
     html_with_separator = '''
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
     <p>What is the capital of France?</p>
-    
-    <hr />
-    
-    <p>placeholder: Enter your answer here...</p>
-    <p>marks: 2</p>
-    <p>show_answer: true</p>
-    <p>answer: Paris is the capital of France.</p>
+    ---
+    <p>placeholder: Enter your answer here..., marks: 2, show_answer: true, answer: Paris is the capital of France.</p>
 </div>
 '''
     
@@ -135,20 +130,13 @@ def test_complex_config_placeholder_isolation():
     mock_file = type('MockFile', (), {'src_path': 'test.md'})()
     mock_page = type('MockPage', (), {'file': mock_file})()
     
-    # Test complex configuration that might cause leakage
+    # Test complex configuration that might cause leakage with comma-separated format
     html_complex = '''
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
     <p>Analyze this complex algorithm and explain its time complexity:</p>
-    
-    <hr />
-    
-    <p>placeholder: Describe the algorithm analysis...</p>
-    <p>marks: 10</p>
-    <p>type: long</p>
-    <p>show_answer: true</p>
-    <p>answer: This algorithm has O(n log n) time complexity due to the sorting step.</p>
-    <p>rows: 8</p>
+    ---
+    <p>placeholder: Describe the algorithm analysis..., marks: 10, type: long, show_answer: true, answer: This algorithm has O(n log n) time complexity due to the sorting step., rows: 8</p>
 </div>
 '''
     
@@ -179,18 +167,13 @@ def test_demo_page_exact_reproduction():
     mock_file = type('MockFile', (), {'src_path': 'demo.md'})()
     mock_page = type('MockPage', (), {'file': mock_file})()
     
-    # This is the EXACT HTML structure from the demo page
+    # This is the EXACT HTML structure from the demo page updated to use --- separator
     html_demo_exact = '''
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
     <p>What is the capital of France?</p>
-    
-    <hr />
-    
-    <p>placeholder: Enter your answer here...</p>
-    <p>marks: 2</p>
-    <p>show_answer: true</p>
-    <p>answer: Paris is the capital of France.</p>
+    ---
+    <p>placeholder: Enter your answer here..., marks: 2, show_answer: true, answer: Paris is the capital of France.</p>
 </div>
 '''
     
@@ -231,11 +214,8 @@ def test_question_text_vs_placeholder_separation():
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
     <p>What is machine learning and how does it differ from traditional programming?</p>
-    
-    <hr />
-    
-    <p>placeholder: Explain machine learning concepts...</p>
-    <p>marks: 5</p>
+    ---
+    <p>placeholder: Explain machine learning concepts..., marks: 5</p>
 </div>
 '''
     
@@ -563,10 +543,11 @@ def test_mathematical_content_preservation():
     html_math = '''
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
-    <p>question: Solve for x: ax² + bx + c = 0</p>
+    <p>Solve for x: ax² + bx + c = 0</p>
     <p>Given: a ≠ 0, Δ = b² - 4ac ≥ 0</p>
     <p>Formula: x = (-b ± √Δ) / 2a</p>
     <p>Show your work step by step.</p>
+    ---
     <p>marks: 10</p>
 </div>
 '''
@@ -672,7 +653,7 @@ def test_complex_content_preservation_with_config():
     html_complex = '''
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
-    <p>question: Analyze the following architecture:</p>
+    <p>Analyze the following architecture:</p>
     <h3>System Overview</h3>
     <p><img src="architecture.png" alt="System Architecture" /></p>
     <pre class="mermaid"><code>
@@ -695,10 +676,8 @@ def process_request(data):
         <li>Database optimization</li>
         <li>Caching strategies</li>
     </ul>
-    <p>marks: 15</p>
-    <p>placeholder: Provide detailed analysis...</p>
-    <p>show_answer: true</p>
-    <p>answer: Consider horizontal scaling, implement Redis caching...</p>
+    ---
+    <p>marks: 15, placeholder: Provide detailed analysis..., show_answer: true, answer: Consider horizontal scaling and implement Redis caching</p>
 </div>
 '''
     

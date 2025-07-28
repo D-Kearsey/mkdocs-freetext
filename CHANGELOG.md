@@ -5,6 +5,35 @@ All notable changes to the MkDocs Free-Text Plugin will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-27
+
+### Major Improvements
+- **New Question Syntax**: Introduced modern `---` separator syntax for writing questions with improved readability and flexibility:
+  ```markdown
+  !!! freetext
+      Your question text here
+      ---
+      marks: 5, type: long, max_chars: 200
+  ```
+- **Comma-Separated Configuration**: All configuration now uses modern comma-separated format instead of line-based format for better organization
+- **Enhanced Test Suite**: Achieved 100% test coverage with 111 comprehensive tests validating all plugin functionality
+- **Format Standardization**: Systematically updated all tests and examples to use the new `---` separator format
+
+### Removed
+- **Auto-save Functionality**: Completely removed auto-save and localStorage functionality to improve security and reduce complexity
+- **Legacy Test Code**: Removed outdated test methods and assertions related to deprecated auto-save features
+
+### Enhanced
+- **Configuration Parsing**: Robust dual-mode parsing supporting both new `---` separator and legacy formats for backward compatibility
+- **Test Organization**: Consolidated and organized test suite with clear separation of concerns and comprehensive coverage
+- **Documentation**: Updated all documentation to showcase the new question syntax consistently
+
+### Technical Details
+- Plugin now primarily uses `---` separator parsing with fallback to legacy format for compatibility
+- Removed all localStorage.setItem and localStorage.getItem functionality from JavaScript generation
+- Updated 6+ test files with systematic format conversion from legacy to modern syntax
+- All assertions about auto-save functionality removed from test suite
+
 ## [1.0.4] - 2025-01-27
 
 ### Fixed

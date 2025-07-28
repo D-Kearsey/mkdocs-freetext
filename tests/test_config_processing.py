@@ -195,7 +195,7 @@ class TestConfigurationProcessing:
         html_complex = '''
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
-    <p>question: Analyze the following architecture:</p>
+    <p>Analyze the following architecture:</p>
     <h3>System Overview</h3>
     <p><img src="architecture.png" alt="System Architecture" /></p>
     <pre class="mermaid"><code>
@@ -218,10 +218,8 @@ def process_request(data):
         <li>Database optimization</li>
         <li>Caching strategies</li>
     </ul>
-    <p>marks: 15</p>
-    <p>placeholder: Provide detailed analysis...</p>
-    <p>show_answer: true</p>
-    <p>answer: Consider horizontal scaling, implement Redis caching...</p>
+    ---
+    <p>marks: 15, placeholder: Provide detailed analysis..., show_answer: true, answer: Consider horizontal scaling and implement Redis caching</p>
 </div>
 '''
         

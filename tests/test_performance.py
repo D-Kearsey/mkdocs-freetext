@@ -199,10 +199,9 @@ def process_data_{i}():
     
     # JavaScript functions should be unique
     import re
-    auto_save_functions = re.findall(r'autoSave_\w+', result)
     char_count_functions = re.findall(r'updateCharCount_\w+', result)
     
-    assert len(set(auto_save_functions)) == num_questions, "Auto-save functions should be unique"
+    # Auto-save functionality has been removed from the plugin
     assert len(set(char_count_functions)) == num_questions, "Character count functions should be unique"
 
 

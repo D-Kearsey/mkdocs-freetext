@@ -2,6 +2,40 @@
 
 Complete reference for all configuration options available in the MkDocs Free-Text Questions Plugin.
 
+## 🆕 New Syntax (v1.1.0+)
+
+The plugin now supports a modern, clean syntax using the `---` separator:
+
+### Single Question Format
+```markdown
+!!! freetext
+    Your question content here (supports rich markdown)
+    ---
+    marks: 5, type: long, placeholder: Your answer here..., show_answer: true
+```
+
+### Assessment Format
+```markdown
+!!! freetext-assessment
+    title: My Assessment, shuffle: true
+    
+    First question content here
+    ---
+    marks: 5, type: short
+    
+    <hr>
+    
+    Second question content here
+    ---
+    marks: 10, type: long, rows: 8
+```
+
+**Key Benefits:**
+- ✅ Clean separation between content and configuration
+- ✅ Comma-separated configuration for better readability
+- ✅ Supports complex rich content without conflicts
+- ✅ Backward compatible with legacy format
+
 ## Plugin Configuration
 
 Configure the plugin in your `mkdocs.yml` file:
@@ -22,7 +56,7 @@ plugins:
       # Functionality
       shuffle_questions: false
       show_character_count: true
-      enable_auto_save: true
+      # Note: Auto-save functionality has been removed in v1.1.0+
       
       # Default Values
       default_answer_rows: 3
@@ -57,7 +91,8 @@ plugins:
 |--------|------|---------|-------------|
 | `shuffle_questions` | Boolean | false | Randomly shuffle question order in assessments |
 | `show_character_count` | Boolean | true | Show character counter on text areas |
-| `enable_auto_save` | Boolean | true | Auto-save answers to localStorage |
+
+**Note:** Auto-save functionality has been removed in v1.1.0+ for improved security and reduced complexity.
 
 ### Default Values
 

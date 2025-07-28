@@ -128,9 +128,19 @@ def test_function_name_id_matching():
         print(f"✅ Found matching function for onclick: {function_name}")
     
     for oninput in oninput_calls:
-        function_name = oninput.replace('()', '')
-        assert function_name in function_defs, f"Missing function definition for: {function_name}"
-        print(f"✅ Found matching function for oninput: {function_name}")
+        # Handle both single function calls and semicolon-separated calls
+        if ';' in oninput:
+            # Split by semicolon and process each function call
+            calls = [call.strip() for call in oninput.split(';') if call.strip()]
+        else:
+            calls = [oninput.strip()]
+        
+        for call in calls:
+            if '(' in call and call.strip():
+                function_name = call.split('(')[0].strip()
+                if function_name:
+                    assert function_name in function_defs, f"Missing function definition for: {function_name}"
+                    print(f"✅ Found matching function for oninput: {function_name}")
 
 
 def test_debug_javascript_generation():

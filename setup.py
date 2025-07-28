@@ -12,7 +12,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="mkdocs-freetext",
-    version="1.0.1",
+    version="1.1.0",
     author="Drew Kearsey",
     author_email="drew.kearsey@kubrickgroup.com",
     description="A comprehensive MkDocs plugin for adding interactive free-text questions and assessments",

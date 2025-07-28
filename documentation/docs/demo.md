@@ -11,13 +11,8 @@ Try answering this simple question using our modern syntax:
 
 !!! freetext
     What is the capital of France?
-    
     ---
-    
-    placeholder: Enter your answer here...,
-    marks: 2,
-    show_answer: true,
-    answer: """Paris is the capital of France, and it is also known as the City of Light, home to the Eiffel Tower."""
+    placeholder: Enter your answer here..., marks: 2, show_answer: true, answer: """Paris is the capital of France, and it is also known as the City of Light, home to the Eiffel Tower."""
 
 ## Triple Quote Support for Complex Answers
 
@@ -25,22 +20,13 @@ The plugin now supports **triple quotes** (`"""`) to handle answers containing c
 
 !!! freetext
     List the programming languages you know and explain their primary use cases.
-    
     ---
-    
-    marks: 5,
-    show_answer: true,
-    answer: """I know Python, JavaScript, and Java. Python is excellent for data science, machine learning, and backend development. JavaScript powers web frontend, Node.js backends, and mobile apps. Java is used for enterprise applications, Android development, and large-scale systems."""
+    marks: 5, show_answer: true, answer: """I know Python, JavaScript, and Java. Python is excellent for data science, machine learning, and backend development. JavaScript powers web frontend, Node.js backends, and mobile apps. Java is used for enterprise applications, Android development, and large-scale systems."""
 
 !!! freetext
     Explain the time complexity of common sorting algorithms.
-    
     ---
-    
-    marks: 8,
-    placeholder: "Discuss Big O notation and algorithm performance...",
-    show_answer: true,
-    answer: """Common sorting algorithms have different time complexities: Bubble Sort is O(n²) in worst case, O(n) in best case. Quick Sort averages O(n log n) but worst case is O(n²). Merge Sort is consistently O(n log n). Heap Sort is O(n log n) guaranteed. The "best" algorithm depends on data size, memory constraints, and whether the data is partially sorted."""
+    marks: 8, placeholder: "Discuss Big O notation and algorithm performance...", show_answer: true, answer: """Common sorting algorithms have different time complexities: Bubble Sort is O(n²) in worst case, O(n) in best case. Quick Sort averages O(n log n) but worst case is O(n²). Merge Sort is consistently O(n log n). Heap Sort is O(n log n) guaranteed. The "best" algorithm depends on data size, memory constraints, and whether the data is partially sorted."""
 
 ## Question with Code Block
 
@@ -66,13 +52,8 @@ This example shows how questions can include syntax-highlighted code blocks:
     ```
     
     What is the time complexity and when would you use this algorithm?
-    
     ---
-    
-    marks: 5,
-    placeholder: Explain the algorithm, its complexity, and use cases...,
-    show_answer: true,
-    answer: This is a binary search algorithm that finds the position of a target value in a sorted array. Time complexity is O(log n) because it eliminates half the search space in each iteration. It's used when you need fast lookups in sorted data, much more efficient than linear search O(n) for large datasets.
+    marks: 5, placeholder: Explain the algorithm, its complexity, and use cases..., show_answer: true, answer: This is a binary search algorithm that finds the position of a target value in a sorted array. Time complexity is O(log n) because it eliminates half the search space in each iteration. It's used when you need fast lookups in sorted data, much more efficient than linear search O(n) for large datasets.
 
 ## Mermaid Diagram Question
 
@@ -96,13 +77,8 @@ See how the plugin handles interactive Mermaid diagrams within questions:
     ```
     
     Consider scalability, reliability, and security aspects.
-    
     ---
-    
-    marks: 12,
-    placeholder: Analyze the architecture and suggest improvements...,
-    show_answer: true,
-    answer: Potential issues: 1) Single API Gateway bottleneck, 2) No service discovery mechanism, 3) Direct database connections without connection pooling, 4) No caching layer, 5) Missing monitoring/logging. Improvements: Load balance the API Gateway, implement service mesh (Istio), add Redis caching, use database connection pools, implement circuit breakers, add distributed tracing, and use message queues for async communication between services.
+    marks: 12, placeholder: Analyze the architecture and suggest improvements..., show_answer: true, answer: Potential issues: 1) Single API Gateway bottleneck, 2) No service discovery mechanism, 3) Direct database connections without connection pooling, 4) No caching layer, 5) Missing monitoring/logging. Improvements: Load balance the API Gateway, implement service mesh (Istio), add Redis caching, use database connection pools, implement circuit breakers, add distributed tracing, and use message queues for async communication between services.
 
 ## Visual Learning with Images
 

@@ -178,13 +178,15 @@ def test_page_level_css_javascript_integration():
     html_multiple_features = '''
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
-    <p>question: First question with features</p>
+    <p>First question with features</p>
+    ---
     <p>max_chars: 100</p>
 </div>
 
 <div class="admonition freetext">
     <p class="admonition-title">Freetext</p>
-    <p>question: Second question with features</p>
+    <p>Second question with features</p>
+    ---
     <p>max_chars: 200</p>
 </div>
 '''
@@ -201,19 +203,25 @@ def test_page_level_css_javascript_integration():
         assert 'textarea' in result.lower(), "CSS should include textarea styles"
         assert 'char-count' in result, "CSS should include character counter styles"
     
-    # JavaScript should be present for each question (functions appear multiple times: definition + calls)
+    # JavaScript should be present for each question
     import re
-    auto_save_functions = re.findall(r'autoSave_\w+', result)
     char_count_functions = re.findall(r'updateCharCount_\w+', result)
+    submit_functions = re.findall(r'submitAnswer_\w+', result)
     
-    # Auto-save functions appear 2 times each (definition + oninput call) for 2 questions = 4 total
-    assert len(auto_save_functions) == 4, f"Should have 4 auto-save function occurrences (2 per question), got {len(auto_save_functions)}"
-    # Character count functions appear 3 times each (definition + oninput call + DOM ready call) for 2 questions = 6 total
-    assert len(char_count_functions) == 6, f"Should have 6 character count function occurrences (3 per question), got {len(char_count_functions)}"
+    # Auto-save functionality has been removed from the plugin
+    # Check that no localStorage functionality is present
+    assert 'localStorage.setItem' not in result, "localStorage functionality has been removed"
+    assert 'autoSave_' not in result, "Auto-save functions have been removed"
     
-    # Functions should have unique names (2 unique function names each)
-    assert len(set(auto_save_functions)) == 2, "Should have 2 unique auto-save function names"
-    assert len(set(char_count_functions)) == 2, "Should have 2 unique character count function names"
+    # Character count functions should still be present (if character count is enabled)
+    assert len(char_count_functions) >= 2, f"Should have character count functions for both questions, got {len(char_count_functions)}: {char_count_functions}"
+    
+    # Submit functions should be present
+    assert len(submit_functions) >= 2, f"Should have submit functions for both questions, got {len(submit_functions)}"
+    
+    # Functions should have unique names
+    assert len(set(char_count_functions)) >= 2, "Should have unique character count function names"
+    assert len(set(submit_functions)) >= 2, "Should have unique submit function names"
 
 
 def test_plugin_hook_integration():

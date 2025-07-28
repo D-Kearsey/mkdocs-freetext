@@ -7,13 +7,30 @@ A comprehensive MkDocs plugin for adding interactive free-text input questions a
 - **Interactive Questions**: Add free-text input questions directly to your documentation
 - **Multi-Question Assessments**: Create comprehensive assessments with multiple questions
 - **Rich Content Support**: Questions support Mermaid diagrams, code blocks, images, and markdown
+- **Modern Syntax**: Clean `---` separator syntax for organized configuration
 - **Material Theme Integration**: Seamlessly integrates with MkDocs Material theme, including automatic dark/light mode support
-- **Persistent Storage**: Auto-saves user answers in browser localStorage
-- **Flexible Configuration**: Customize appearance, behavior, and validation
+- **Flexible Configuration**: Customize appearance, behavior, and validation using comma-separated format
 - **Question Shuffling**: Optional randomization of assessment question order
 - **Character Counting**: Optional character counter for text inputs
 - **Sample Answers**: Show/hide sample answers for learning reinforcement
 - **Clean Separation**: Use `---` separator to cleanly separate question content from configuration
+
+## 📝 New Syntax (v1.1.0+)
+
+This plugin now uses a modern, clean syntax with the `---` separator:
+
+```markdown
+!!! freetext
+    Your question content here (supports rich markdown, code, diagrams)
+    ---
+    marks: 5, type: long, placeholder: Your placeholder..., show_answer: true
+```
+
+**Key Benefits:**
+- ✅ Cleaner separation between content and configuration
+- ✅ Comma-separated configuration for better readability
+- ✅ Supports complex rich content without conflicts
+- ✅ Backward compatible with legacy format
 
 ## 🚀 Quick Start
 
@@ -37,12 +54,8 @@ plugins:
 ```markdown
 !!! freetext
     What is the capital of France?
-    
     ---
-    marks: 2
-    placeholder: Enter your answer here...
-    show_answer: true
-    answer: Paris is the capital of France.
+    marks: 2, placeholder: Enter your answer here..., show_answer: true, answer: Paris is the capital of France.
 ```
 
 ### Rich Content Question Example
@@ -59,12 +72,8 @@ plugins:
     ```
     
     What is the time complexity of this algorithm?
-    
     ---
-    marks: 10
-    type: long
-    rows: 6
-    placeholder: Explain the algorithm and its complexity...
+    marks: 10, type: long, rows: 6, placeholder: Explain the algorithm and its complexity...
 ```
 
 ### Question with Images and Diagrams
@@ -85,11 +94,8 @@ plugins:
     ```
     
     How would you scale this system to handle 10x more traffic?
-    
     ---
-    marks: 15
-    type: long
-    rows: 8
+    marks: 15, type: long, rows: 8
 ```
 
 ### Assessment Example
@@ -99,15 +105,15 @@ plugins:
     title: Python Basics Assessment
     shuffle: true
     
-    question: What is a variable in Python?
-    marks: 3
-    placeholder: Describe what a variable is...
-    
+    What is a variable in Python?
     ---
+    marks: 3, placeholder: Describe what a variable is...
     
-    question: Explain the difference between a list and a tuple.
-    marks: 5
-    placeholder: Compare lists and tuples...
+    <hr>
+    
+    Explain the difference between a list and a tuple.
+    ---
+    marks: 5, placeholder: Compare lists and tuples...
 ```
 
 ## 📖 Documentation
@@ -139,7 +145,7 @@ This plugin is designed to work seamlessly with the Material for MkDocs theme:
 
 ```markdown
 !!! freetext
-    question: Analyze the following Python code and explain what it does:
+    Analyze the following Python code and explain what it does:
     
     ```python
     def fibonacci(n):
@@ -149,9 +155,8 @@ This plugin is designed to work seamlessly with the Material for MkDocs theme:
     ```
     
     What is the time complexity of this implementation?
-    
-    marks: 5
-    placeholder: Explain the code and analyze its complexity...
+    ---
+    marks: 5, placeholder: Explain the code and analyze its complexity...
 ```
 
 ### Assessment with Mermaid Diagram
@@ -160,7 +165,7 @@ This plugin is designed to work seamlessly with the Material for MkDocs theme:
 !!! freetext-assessment
     title: System Design Assessment
     
-    question: Based on this system architecture, identify potential bottlenecks:
+    Based on this system architecture, identify potential bottlenecks:
     
     ```mermaid
     graph TD
@@ -170,9 +175,8 @@ This plugin is designed to work seamlessly with the Material for MkDocs theme:
         C --> E[Database]
         D --> E
     ```
-    
-    marks: 10
-    placeholder: Identify and explain potential bottlenecks...
+    ---
+    marks: 10, placeholder: Identify and explain potential bottlenecks...
 ```
 
 ## 📄 License

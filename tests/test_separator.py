@@ -50,10 +50,7 @@ JOIN orders ON users.id = orders.user_id
 WHERE orders.date > '2024-01-01'</code></pre></div>
     <p>How would you optimize this query?</p>
     ---
-    <p>marks: 10</p>
-    <p>type: long</p>
-    <p>show_answer: true</p>
-    <p>answer: Add indexes on user_id and date columns</p>
+    <p>marks: 10, type: long, show_answer: true, answer: Add indexes on user_id and date columns</p>
 </div>'''
     
     result = plugin.on_page_content(html, mock_page, {}, None)
@@ -116,9 +113,7 @@ def test_separator_with_mixed_content_order():
         <p>Note: Consider edge cases</p>
     </blockquote>
     ---
-    <p>marks: 15</p>
-    <p>type: long</p>
-    <p>rows: 10</p>
+    <p>marks: 15, type: long, rows: 10</p>
 </div>'''
     
     result = plugin.on_page_content(html, mock_page, {}, None)

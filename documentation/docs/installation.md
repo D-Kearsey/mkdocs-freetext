@@ -33,6 +33,17 @@ plugins:
   - freetext
 ```
 
+### Quick Start with New Syntax (v1.1.0+)
+
+Create your first question using the modern syntax:
+
+```markdown
+!!! freetext
+    What is your favorite programming language and why?
+    ---
+    marks: 5, type: long, placeholder: Share your thoughts..., show_answer: true, answer: This is a sample answer explaining why Python is great for beginners.
+```
+
 ### With Material Theme
 
 For the best experience, use with Material theme:

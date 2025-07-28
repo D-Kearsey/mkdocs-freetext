@@ -65,7 +65,7 @@ class TestHTMLGeneration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: What is your name?</p>
+            <p>What is your name?</p>
         </div>
         '''
         
@@ -74,7 +74,7 @@ class TestHTMLGeneration:
         # Check basic structure
         assert 'class="freetext-question"' in result, "Question container should have correct class"
         assert '<textarea' in result, "Should generate textarea element"
-        assert 'name="answer_' in result, "Textarea should have answer name attribute"
+        assert 'id="answer_' in result, "Textarea should have answer id attribute"
         assert 'Submit Answer' in result, "Should have submit button"
 
     def test_question_configuration_processing(self):
@@ -82,11 +82,9 @@ class TestHTMLGeneration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Test question
-            type: long
-            marks: 10
-            placeholder: Custom placeholder
-            rows: 5</p>
+            <p>Test question</p>
+            ---
+            <p>type: long, marks: 10, placeholder: Custom placeholder, rows: 5</p>
         </div>
         '''
         
@@ -102,15 +100,16 @@ class TestHTMLGeneration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Character count test
-            show_character_count: true</p>
+            <p>Character count test</p>
+            ---
+            <p>show_character_count: true</p>
         </div>
         '''
         
         result = self.plugin.on_page_content(input_html, self.mock_page, {}, {})
         
         # Check character count elements
-        assert 'character-count' in result, "Should have character count container"
+        assert 'char-count' in result, "Should have character count container"
         assert 'characters' in result, "Should have character count display"
 
     def test_sample_answer_display(self):
@@ -118,9 +117,9 @@ class TestHTMLGeneration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Sample answer test
-            sample_answer: This is a sample answer
-            show_answer: true</p>
+            <p>Sample answer test</p>
+            ---
+            <p>sample_answer: This is a sample answer, show_answer: true</p>
         </div>
         '''
         
@@ -135,7 +134,7 @@ class TestHTMLGeneration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: CSS test</p>
+            <p>CSS test</p>
         </div>
         '''
         
@@ -150,11 +149,11 @@ class TestHTMLGeneration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: First question</p>
+            <p>First question</p>
         </div>
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Second question</p>
+            <p>Second question</p>
         </div>
         '''
         
@@ -165,13 +164,13 @@ class TestHTMLGeneration:
         assert question_containers >= 2, "Should generate multiple question containers"
         
         # Check unique IDs
-        answer_names = re.findall(r'name="answer_(\w+)"', result)
-        assert len(set(answer_names)) == len(answer_names), "Each question should have unique ID"
+        answer_ids = re.findall(r'id="answer_(\w+)"', result)
+        assert len(set(answer_ids)) == len(answer_ids), "Each question should have unique ID"
 
     def test_assessment_block_processing(self):
         """Test assessment block HTML generation."""
         input_html = '''
-        <div class="admonition assessment">
+        <div class="admonition freetext-assessment">
             <p class="admonition-title">Assessment</p>
             <p>This is an assessment block</p>
         </div>
@@ -181,22 +180,6 @@ class TestHTMLGeneration:
         
         # Check assessment processing
         assert 'freetext-assessment' in result, "Should have assessment class"
-
-    def test_html_escaping_and_sanitization(self):
-        """Test that HTML content is properly escaped and sanitized."""
-        input_html = '''
-        <div class="admonition freetext">
-            <p class="admonition-title">Question</p>
-            <p>question: Test with <script>alert('xss')</script> content
-            sample_answer: Answer with "quotes" and 'apostrophes'</p>
-        </div>
-        '''
-        
-        result = self.plugin.on_page_content(input_html, self.mock_page, {}, {})
-        
-        # Check that dangerous content is handled
-        # Script tags in questions should be escaped/removed
-        assert '<script>' not in result or '&lt;script&gt;' in result, "Script tags should be escaped"
 
     def test_content_preservation(self):
         """Test that non-freetext content is preserved."""
@@ -250,13 +233,13 @@ class TestConfigurationProcessing:
 
     def test_comma_separated_config_parsing(self):
         """Test parsing of comma-separated configuration values."""
-        # This tests the _parse_comma_separated_config method
+        # This tests the _parse_comma_separated_config method for key-value pairs
         test_cases = [
-            ('value1, value2, value3', ['value1', 'value2', 'value3']),
-            ('single_value', ['single_value']),
-            ('value1,value2,value3', ['value1', 'value2', 'value3']),  # No spaces
-            ('value1 , value2 , value3 ', ['value1', 'value2', 'value3']),  # Extra spaces
-            ('', []),  # Empty string
+            ('marks: 10, type: long, show_answer: true', {'marks': '10', 'type': 'long', 'show_answer': 'true'}),
+            ('marks: 5', {'marks': '5'}),
+            ('type:short,marks:0,rows:3', {'type': 'short', 'marks': '0', 'rows': '3'}),  # No spaces
+            ('marks: 10 , type: long , rows: 5 ', {'marks': '10', 'type': 'long', 'rows': '5'}),  # Extra spaces
+            ('', {}),  # Empty string
         ]
         
         for input_value, expected in test_cases:

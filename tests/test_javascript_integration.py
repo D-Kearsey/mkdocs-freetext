@@ -66,9 +66,9 @@ class TestJavaScriptIntegration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: What is your name?
-            type: short
-            marks: 5</p>
+            <p>What is your name?</p>
+            ---
+            <p>type: short, marks: 5</p>
         </div>
         '''
         
@@ -115,9 +115,9 @@ class TestJavaScriptIntegration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Test question with character count
-            show_character_count: true
-            enable_auto_save: true</p>
+            <p>Test question with character count</p>
+            ---
+            <p>show_character_count: true, enable_auto_save: true</p>
         </div>
         '''
         
@@ -139,8 +139,9 @@ class TestJavaScriptIntegration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Test with triple quotes
-            sample_answer: This is a """sample answer""" with quotes</p>
+            <p>Test with triple quotes</p>
+            ---
+            <p>answer: This is a """sample answer""" with quotes</p>
         </div>
         '''
         
@@ -164,9 +165,9 @@ class TestJavaScriptIntegration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Submit test question
-            show_answer: true
-            sample_answer: Test answer</p>
+            <p>Submit test question</p>
+            ---
+            <p>show_answer: true, sample_answer: Test answer</p>
         </div>
         '''
         
@@ -188,8 +189,9 @@ class TestJavaScriptIntegration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Character count test
-            show_character_count: true</p>
+            <p>Character count test</p>
+            ---
+            <p>show_character_count: true</p>
         </div>
         '''
         
@@ -201,33 +203,16 @@ class TestJavaScriptIntegration:
         assert 'oninput=' in final_html, "Character count should be triggered on input"
         assert 'characters' in final_html, "Character count display should be present"
 
-    def test_auto_save_functionality(self):
-        """Test auto-save JavaScript generation."""
-        input_html = '''
-        <div class="admonition freetext">
-            <p class="admonition-title">Question</p>
-            <p>question: Auto-save test
-            enable_auto_save: true</p>
-        </div>
-        '''
-        
-        result_html = self.plugin.on_page_content(input_html, self.mock_page, {}, {})
-        final_html = self.plugin.on_post_page(result_html, self.mock_page, {})
-        
-        # Check for auto-save functionality
-        assert 'autoSave_' in final_html, "Auto-save function should be generated"
-        assert 'localStorage' in final_html, "Auto-save should use localStorage"
-
     def test_multiple_questions_unique_ids(self):
         """Test that multiple questions generate unique function names."""
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: First question</p>
+            <p>First question</p>
         </div>
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: Second question</p>
+            <p>Second question</p>
         </div>
         '''
         
@@ -246,8 +231,9 @@ class TestJavaScriptIntegration:
         input_html = '''
         <div class="admonition freetext">
             <p class="admonition-title">Question</p>
-            <p>question: DOM ready test
-            enable_auto_save: true</p>
+            <p>DOM ready test</p>
+            ---
+            <p>enable_auto_save: true</p>
         </div>
         '''
         

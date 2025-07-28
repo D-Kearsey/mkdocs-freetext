@@ -37,7 +37,7 @@ def test_plugin_config_defaults_applied():
     assert 'placeholder="Enter your answer..."' in result, "Should use default placeholder"
     assert 'rows="3"' in result, "Should use default answer rows"
     assert 'charCount_' in result, "Should include character counter (default enabled)"
-    assert 'autoSave_' in result, "Should include auto-save (default enabled)"
+    # Auto-save functionality has been removed from the plugin
 
 
 def test_custom_css_classes():
@@ -144,13 +144,14 @@ def test_auto_save_toggle():
     result_enabled = plugin_enabled.on_page_content(html_question, mock_page, {}, None)
     result_disabled = plugin_disabled.on_page_content(html_question, mock_page, {}, None)
     
-    # Verify auto-save JavaScript presence/absence
-    assert 'autoSave_' in result_enabled, "Should include auto-save JS when enabled"
-    assert 'localStorage.setItem' in result_enabled, "Should include localStorage code when enabled"
-    assert 'if (true)' in result_enabled, "Should have auto-save enabled in JS"
+    # Auto-save functionality has been removed from the plugin
+    # Both enabled and disabled should work the same way (no localStorage)
+    assert 'freetext-question' in result_enabled, "Should generate question HTML when enabled"
+    assert 'freetext-question' in result_disabled, "Should generate question HTML when disabled"
     
-    assert 'if (false)' in result_disabled, "Should have auto-save disabled in JS"
-    # Note: JS function may still be present but disabled
+    # Verify no localStorage functionality is present (it's been removed)
+    assert 'localStorage.setItem' not in result_enabled, "localStorage functionality has been removed"
+    assert 'localStorage.setItem' not in result_disabled, "localStorage functionality has been removed"
 
 
 def test_custom_default_values():

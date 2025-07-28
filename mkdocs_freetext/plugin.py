@@ -354,25 +354,49 @@ document.addEventListener('DOMContentLoaded', function() {{
         """Parse configuration from a dedicated config section using comma-separated format."""
         import re
         
-        # Clean up the content - remove HTML tags and normalize whitespace
-        clean_content = re.sub(r'<[^>]+>', '', config_content)
-        clean_content = re.sub(r'\s+', ' ', clean_content).strip()
+        # Clean up the content - remove HTML tags
+        clean_content = re.sub(r'<[^>]+>', '', config_content).strip()
         
         print(f"DEBUG: Parsing config content: {clean_content}")
         
-        # Always use comma-separated parsing
+        # Check if it looks like incorrect line-based config
+        if '\n' in clean_content and ',' not in clean_content:
+            print(f"WARNING: Configuration appears to use line-based format instead of comma-separated format.")
+            print(f"WARNING: Expected format: 'marks: 10, type: long, rows: 5'")
+            print(f"WARNING: Please update your configuration to use comma-separated format.")
+            print(f"WARNING: Using default configuration values.")
+            # Don't try to parse - just use defaults
+            return
+        
+        # Parse using comma-separated format only
         config_dict = self._parse_comma_separated_config(clean_content)
         
         print(f"DEBUG: Parsed config dictionary: {config_dict}")
+        
+        # Validate that we got a proper config dictionary
+        if not isinstance(config_dict, dict):
+            print(f"WARNING: Configuration parsing failed for: '{clean_content}'")
+            print(f"WARNING: Please use comma-separated format: 'key1: value1, key2: value2'")
+            print(f"WARNING: Using default configuration values.")
+            return
+        
+        if not config_dict and clean_content.strip():
+            print(f"WARNING: Failed to parse configuration: '{clean_content}'")
+            print(f"WARNING: Please use comma-separated format: 'key1: value1, key2: value2'")
+            print(f"WARNING: Using default configuration values.")
+            return
         
         # Apply config values with type conversion and validation
         self._apply_config_dictionary(config_dict, config)
 
     def _parse_comma_separated_config(self, content):
-        """Parse comma-separated config content into a dictionary."""
+        """Parse comma-separated config content into key:value dictionary."""
+        if not content or not content.strip():
+            return {}
+        
         config_dict = {}
         
-        # Simple comma-split approach for the basic format
+        # Split by commas and parse each key:value pair
         items = [item.strip() for item in content.split(',')]
         
         for item in items:
@@ -386,6 +410,9 @@ document.addEventListener('DOMContentLoaded', function() {{
                     value = value[1:-1]
                 
                 config_dict[key] = value
+            elif item.strip():
+                # Item without colon - invalid format
+                print(f"WARNING: Invalid config item '{item}' - expected 'key: value' format")
         
         return config_dict
 
@@ -951,8 +978,7 @@ document.addEventListener('DOMContentLoaded', function() {{
         oninput_parts = []
         if self.config.get('show_character_count', True):
             oninput_parts.append(f"updateCharCount_{question_id}()")
-        # Always include auto-save call - the function itself controls whether it's active
-        oninput_parts.append(f"autoSave_{question_id}()")
+        # Auto-save functionality has been removed from the plugin
         oninput_attr = f'oninput="{"; ".join(oninput_parts)};"' if oninput_parts else ''
         
         # Process question text as markdown
@@ -968,6 +994,7 @@ document.addEventListener('DOMContentLoaded', function() {{
     <div class="answer-section">
         <textarea 
             id="answer_{question_id}" 
+            class="{self.config.get('answer_class', 'freetext-answer')}"
             rows="{rows}" 
             placeholder="{self._escape_html(config['placeholder'])}"
             {oninput_attr}
@@ -987,7 +1014,7 @@ document.addEventListener('DOMContentLoaded', function() {{
         question_js = self._generate_question_javascript(question_id, config)
         if hasattr(self, 'current_page_javascript'):
             self.current_page_javascript.append(question_js)
-            print(f"GENERATED JS for question {question_id}: Functions should include updateCharCount_{question_id}, submitAnswer_{question_id}, autoSave_{question_id}")
+            print(f"GENERATED JS for question {question_id}: Functions should include updateCharCount_{question_id}, submitAnswer_{question_id}")
         
         return html
 
@@ -1039,6 +1066,7 @@ document.addEventListener('DOMContentLoaded', function() {{
     <div class="answer-section">
         <textarea 
             id="answer_{question_id}" 
+            class="{self.config.get('answer_class', 'freetext-answer')}"
             rows="{rows}" 
             placeholder="{self._escape_html(config['placeholder'])}"
             {oninput_attr}
@@ -1099,18 +1127,11 @@ document.addEventListener('DOMContentLoaded', function() {{
             js_functions.append(char_count_func)
             print(f"Added updateCharCount_{question_id}")
         
-        # Auto-save function (always generated but conditionally enabled) 
-        auto_save_func = f'''function autoSave_{question_id}() {{
-    if ({enable_auto_save}) {{
-        const answer = document.getElementById('answer_{question_id}').value;
-        localStorage.setItem('freetext_answer_{question_id}', answer);
-    }}
-}}'''
-        js_functions.append(auto_save_func)
-        print(f"Added autoSave_{question_id}")
+        # Auto-save functionality has been removed from the plugin
         
-        # CRITICAL FIX: Clean the answer text for JavaScript
-        clean_answer = self._clean_answer_for_javascript(config.get("answer", "No sample answer provided."))
+        # CRITICAL FIX: Clean the answer text for JavaScript - check both keys
+        answer_text = config.get("sample_answer") or config.get("answer", "No sample answer provided.")
+        clean_answer = self._clean_answer_for_javascript(answer_text)
         
         # Submit function (always included)
         submit_func = f'''function submitAnswer_{question_id}() {{
@@ -1137,39 +1158,15 @@ document.addEventListener('DOMContentLoaded', function() {{
         feedback.style.display = 'none';
     }}
     
-    // Save submission
-    localStorage.setItem('freetext_submitted_{question_id}', 'true');
-    localStorage.setItem('freetext_answer_{question_id}', answer);
+    // Auto-save and answer persistence functionality has been removed from the plugin
 }}'''
         js_functions.append(submit_func)
         print(f"Added submitAnswer_{question_id}")
         
-        # Store DOM ready initialization separately for consolidation (with unique variable names)
-        dom_ready_js = f'''// Initialize question {question_id}
-    const savedAnswer_{question_id} = localStorage.getItem('freetext_answer_{question_id}');
-    const isSubmitted_{question_id} = localStorage.getItem('freetext_submitted_{question_id}');
-    
-    if (savedAnswer_{question_id}) {{
-        const textarea_{question_id} = document.getElementById('answer_{question_id}');
-        if (textarea_{question_id}) {{
-            textarea_{question_id}.value = savedAnswer_{question_id};'''
-        
-        if show_character_count:
-            dom_ready_js += f'''
-            updateCharCount_{question_id}();'''
-        
-        dom_ready_js += f'''
-        }}
-    }}
-    
-    // Restore button state if previously submitted
-    if (isSubmitted_{question_id} === 'true') {{
-        const submitBtn_{question_id} = document.querySelector('[data-question-id="{question_id}"] .submit-btn');
-        if (submitBtn_{question_id}) {{
-            submitBtn_{question_id}.textContent = 'Submitted';
-            submitBtn_{question_id}.title = 'Click to resubmit';
-        }}
-    }}'''
+        # Auto-save and answer persistence functionality has been removed from the plugin
+        dom_ready_js = f'''// Initialize question {question_id} (persistence removed)
+    // Question {question_id} ready for user input
+'''
         
         # Store DOM ready code for later consolidation
         if hasattr(self, 'current_page_dom_ready'):
@@ -1226,9 +1223,7 @@ function submitAssessment_{assessment_id}() {{
         feedback_{qid}.style.display = 'block';
     }}''' for i, qid in enumerate(question_ids))}
     
-    // Save submission
-    localStorage.setItem('freetext_assessment_submitted_{assessment_id}', 'true');
-    localStorage.setItem('freetext_assessment_{assessment_id}', JSON.stringify(answers));
+    // Auto-save and answer persistence functionality has been removed from the plugin
 }}
 
 '''
@@ -1292,27 +1287,12 @@ function shuffleQuestions_{assessment_id}() {{
     }}
 }}
 
-// Auto-load saved assessment answers
+// Auto-load functionality has been removed from the plugin
 document.addEventListener('DOMContentLoaded', function() {{
     // Shuffle questions first if enabled
     shuffleQuestions_{assessment_id}();
     
-    const savedAssessment = localStorage.getItem('freetext_assessment_{assessment_id}');
-    const isAssessmentSubmitted = localStorage.getItem('freetext_assessment_submitted_{assessment_id}');
-    
-    if (savedAssessment) {{
-        const answers = JSON.parse(savedAssessment);
-        {chr(10).join(self._generate_restore_answer_js(qid) for qid in question_ids)}
-    }}
-    
-    // Restore assessment button state if previously submitted
-    if (isAssessmentSubmitted === 'true') {{
-        const submitBtn = document.querySelector('[data-assessment-id="{assessment_id}"] .submit-assessment-btn');
-        if (submitBtn) {{
-            submitBtn.textContent = 'Submitted';
-            submitBtn.title = 'Click to resubmit';
-        }}
-    }}
+    // Assessment ready for user input (persistence removed)
 }});
 '''
         
@@ -1360,17 +1340,16 @@ document.addEventListener('DOMContentLoaded', function() {{
                 final_js = all_functions
             
             # Insert JavaScript at the beginning of head section to ensure functions are defined first
-            js_block = f'\n<script>\n{final_js}\n</script>'
+            js_block = f'\n<script>\n{final_js}\n</script>\n'
             if '<head>' in output:
-                output = output.replace('<head>', '<head>' + js_block)
+                # Insert right after opening <head> tag
+                output = output.replace('<head>', '<head>' + js_block, 1)
             elif '</head>' in output:
-                output = output.replace('</head>', js_block + '\n</head>')
+                # Insert before closing </head> tag
+                output = output.replace('</head>', js_block + '</head>', 1)
             else:
-                # Fallback: add before closing body tag if no head section found
-                if '</body>' in output:
-                    output = output.replace('</body>', js_block + '\n</body>')
-                else:
-                    output += js_block
+                # Fallback: add at very beginning of document
+                output = js_block + output
             print(f"Added consolidated JavaScript block with {len(js_data['functions'])} function groups and {len(js_data['dom_ready'])} DOM ready blocks")
         
         # Insert CSS if enabled
