@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mkdocs-freetext"
-version = "1.1.0"
+version = "1.2.0"
 description = "A comprehensive MkDocs plugin for adding interactive free-text questions and assessments"
 readme = "README.md"
 license = {text = "MIT"}

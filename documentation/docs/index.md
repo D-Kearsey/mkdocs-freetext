@@ -11,11 +11,12 @@ A comprehensive MkDocs plugin for adding **interactive free-text questions and a
 - **🎯 Interactive Questions**: Add free-text input questions directly to your documentation
 - **📝 Multi-Question Assessments**: Create comprehensive assessments with multiple questions  
 - **🎨 Rich Content Support**: Questions support Mermaid diagrams, code blocks, images, and markdown
-- **� Modern Syntax**: Clean `---` separator with comma-separated configuration (v1.1.0+)
-- **�🌓 Material Theme Integration**: Seamless integration with automatic dark/light mode support
-- ** Question Shuffling**: Optional randomization of assessment question order
+- **✨ Modern Syntax**: Clean `---` separator with comma-separated configuration (v1.1.0+)
+- **🌓 Material Theme Integration**: Seamless integration with automatic dark/light mode support
+- **🔀 Question Shuffling**: Optional randomization of assessment question order
 - **📊 Character Counting**: Optional character counter for text inputs
 - **💡 Sample Answers**: Show/hide sample answers for learning reinforcement
+- **🔍 Professional Debugging**: Comprehensive logging system for troubleshooting (v1.2.0+)
 
 ## 🚀 Quick Start
 
@@ -48,7 +49,7 @@ plugins:
 - **[Installation Guide](installation.md)** - Complete setup instructions
 - **[Live Demo](demo.md)** - See the plugin in action with working examples
 - **[Configuration](configuration.md)** - All available options and settings
-- **[Advanced Usage](advanced.md)** - Advanced features and customization
+- **[Debugging & Troubleshooting](debugging.md)** - Professional logging and issue resolution (NEW in v1.2.0)
 
 ## 🏆 Why Choose This Plugin?
 

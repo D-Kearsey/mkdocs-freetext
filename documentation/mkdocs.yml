@@ -41,6 +41,7 @@ nav:
   - Installation: installation.md
   - Live Demo: demo.md
   - Configuration: configuration.md
+  - Debugging & Troubleshooting: debugging.md
 
 markdown_extensions:
   - admonition

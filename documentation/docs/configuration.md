@@ -105,6 +105,39 @@ plugins:
 | `default_show_answer` | Boolean | true | Default show_answer setting |
 | `default_question_type` | string | "short" | Default question type ("short" or "long") |
 
+### 🔍 Debug & Development (v1.2.0+)
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `debug` | Boolean | false | Enable detailed debug logging for troubleshooting |
+| `debug_output_dir` | string | null | Optional directory for debug file output |
+
+#### Debug Mode Configuration
+
+Enable comprehensive logging for development and troubleshooting:
+
+```yaml
+plugins:
+  - freetext:
+      debug: true
+      debug_output_dir: "./debug"  # Optional: specify custom debug directory
+```
+
+**Debug Mode Features:**
+- **Professional Logging System**: Uses Python's standard `logging` module with proper categorization
+- **Multiple Log Levels**: DEBUG (verbose), INFO (important events), WARNING (issues), ERROR (failures)
+- **Clean Output**: Quiet operation by default, detailed logging only when enabled
+- **Configurable Debug Files**: Optional HTML comparison files for content processing analysis
+- **Configuration Validation**: Early detection of configuration issues with helpful error messages
+- **Better Error Messages**: Actionable warnings with suggested solutions
+
+**Example Debug Output:**
+```
+2025-01-28 10:30:15 - mkdocs_freetext.plugin - INFO - FreetextPlugin initialized successfully
+2025-01-28 10:30:16 - mkdocs_freetext.plugin - INFO - Processed freetext questions on page demo.md
+2025-01-28 10:30:16 - mkdocs_freetext.plugin - DEBUG - Generated JavaScript for question abc123
+```
+
 ## Question Syntax
 
 The plugin supports two syntax formats: **Modern Separator Syntax** (recommended) and **Legacy Format** (for backwards compatibility).

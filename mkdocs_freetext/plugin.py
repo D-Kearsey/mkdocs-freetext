@@ -11,9 +11,12 @@ import uuid
 import random
 import json
 import markdown
+import logging
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.pages import Page
+
+logger = logging.getLogger(__name__)
 
 
 class FreetextPlugin(BasePlugin):
@@ -38,23 +41,56 @@ class FreetextPlugin(BasePlugin):
         ('default_show_answer', config_options.Type(bool, default=True)),
         ('default_question_type', config_options.Type(str, default='short')),
         ('debug', config_options.Type(bool, default=False)),
+        ('debug_output_dir', config_options.Type(str, default=None)),
     )
 
     def __init__(self):
         super().__init__()
         self.page_questions = {}  # Track questions per page
         self.page_javascript = {}  # Track JavaScript per page for consolidation
-        self._debug_enabled = False  # Will be set in on_config
 
-    def _debug(self, message):
-        """Print debug message only if debug is enabled"""
-        if self._debug_enabled:
-            print(f"DEBUG: {message}")
+    def _get_expected_type_hint(self, key):
+        """Return expected type for configuration keys."""
+        type_hints = {
+            'marks': 'integer (e.g., 5)',
+            'rows': 'integer (e.g., 3)',
+            'show_answer': 'boolean (true/false)',
+            'type': 'string (short/long)'
+        }
+        return type_hints.get(key, 'string')
+
+    def _validate_config(self):
+        """Validate plugin configuration and log issues."""
+        issues = []
+        
+        if self.config.get('default_answer_rows', 0) < 1:
+            issues.append("default_answer_rows must be at least 1")
+        
+        if self.config.get('default_long_answer_rows', 0) < 1:
+            issues.append("default_long_answer_rows must be at least 1")
+        
+        valid_types = ['short', 'long']
+        if self.config.get('default_question_type') not in valid_types:
+            issues.append(f"default_question_type must be one of: {valid_types}")
+        
+        for issue in issues:
+            logger.error(f"Configuration error: {issue}")
+        
+        return len(issues) == 0
 
     def on_config(self, config):
         """Called once after config is loaded"""
-        self._debug_enabled = self.config.get('debug', False)
-        self._debug("FreetextPlugin initialized with debug enabled!")
+        if self.config.get('debug', False):
+            logger.setLevel(logging.DEBUG)
+            logger.info("FreetextPlugin debug mode enabled")
+        else:
+            logger.setLevel(logging.INFO)
+        
+        # Validate configuration
+        if not self._validate_config():
+            logger.error("Plugin configuration contains errors. Please fix them before proceeding.")
+        
+        logger.info("FreetextPlugin initialized successfully")
         return config
 
     def _process_markdown_content(self, content):
@@ -74,9 +110,8 @@ class FreetextPlugin(BasePlugin):
         self.current_page_javascript = []  # Collect all JavaScript for this page
         self.current_page_dom_ready = []   # Collect all DOM ready code for this page
         
-        # Debug: Print the input HTML
-        self._debug(f"Processing page: {page.file.src_path}")
-        self._debug(f"Input HTML length: {len(html)}")
+        logger.debug(f"Processing page: {page.file.src_path}")
+        logger.debug(f"Input HTML length: {len(html)}")
         
         # Save original HTML for comparison
         original_html = html
@@ -84,9 +119,7 @@ class FreetextPlugin(BasePlugin):
         # Look for freetext admonitions in the HTML
         import re
         freetext_matches = re.findall(r'<div class="admonition freetext[^"]*"[^>]*>', html)
-        self._debug(f"Found {len(freetext_matches)} freetext admonition(s):")
-        for i, match in enumerate(freetext_matches):
-            self._debug(f"  {i+1}. {match}")
+        logger.debug(f"Found {len(freetext_matches)} freetext admonition(s) on page {page.file.src_path}")
         
         # Process freetext assessment blocks FIRST (before individual questions)
         html_before = html
@@ -95,26 +128,29 @@ class FreetextPlugin(BasePlugin):
         # Process individual freetext question blocks AFTER assessments
         html = self._process_freetext_blocks_html(html)
         
-        # Debug: Check if anything changed and write debug files
+        # Check if anything changed and write debug files
         if html != html_before:
-            print(f"HTML was modified! New length: {len(html)}")
+            logger.info(f"Processed freetext questions on page {page.file.src_path}")
             
-            # Write debug files to see what changed
-            debug_dir = "C:/Users/DrewKearsey/OneDrive - Kubrick Group/Training/Local LXP Dev/free_text_questions_plugin/debug"
-            import os
-            os.makedirs(debug_dir, exist_ok=True)
-            
-            page_name = page.file.src_path.replace('.md', '').replace('/', '_')
-            
-            with open(f"{debug_dir}/{page_name}_before.html", "w", encoding="utf-8") as f:
-                f.write(html_before)
-            
-            with open(f"{debug_dir}/{page_name}_after.html", "w", encoding="utf-8") as f:
-                f.write(html)
-                
-            print(f"Debug files written to {debug_dir}")
+            # Write debug files only if debug_output_dir is configured
+            debug_dir = self.config.get('debug_output_dir')
+            if debug_dir:
+                try:
+                    os.makedirs(debug_dir, exist_ok=True)
+                    
+                    page_name = page.file.src_path.replace('.md', '').replace('/', '_')
+                    
+                    with open(f"{debug_dir}/{page_name}_before.html", "w", encoding="utf-8") as f:
+                        f.write(html_before)
+                    
+                    with open(f"{debug_dir}/{page_name}_after.html", "w", encoding="utf-8") as f:
+                        f.write(html)
+                        
+                    logger.debug(f"Debug files written to {debug_dir}")
+                except OSError as e:
+                    logger.error(f"Could not write debug files to {debug_dir}: {e}")
         else:
-            print("HTML was NOT modified")
+            logger.debug(f"No freetext questions found on page {page.file.src_path}")
         
         # Store result for this page
         self.page_questions[page.file.src_path] = self.current_page_has_questions
@@ -128,7 +164,7 @@ class FreetextPlugin(BasePlugin):
                 'functions': self.current_page_javascript[:],  # Make a copy
                 'dom_ready': self.current_page_dom_ready[:]   # Make a copy
             }
-            print(f"Stored JavaScript data for {page.file.src_path}: {len(self.current_page_javascript)} functions, {len(self.current_page_dom_ready)} DOM ready blocks")
+            logger.debug(f"Stored JavaScript data for {page.file.src_path}: {len(self.current_page_javascript)} functions, {len(self.current_page_dom_ready)} DOM ready blocks")
         
         return html
         
@@ -196,8 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {{
         import re
         import uuid
 
-        print(f"\n=== DEBUG: _process_freetext_blocks_html ===")
-        print(f"HTML snippet (first 500 chars): {html[:500]}")
+        logger.debug("Processing freetext blocks in HTML")
+        logger.debug(f"HTML snippet (first 500 chars): {html[:500]}")
 
         # Extract all admonitions first
         def extract_admonition_content(html):
@@ -234,13 +270,13 @@ document.addEventListener('DOMContentLoaded', function() {{
             return results
         
         admonition_matches = extract_admonition_content(html)
-        print(f"Found {len(admonition_matches)} freetext admonition(s) to process")
+        logger.debug(f"Found {len(admonition_matches)} freetext admonition(s) to process")
         
         # PRE-GENERATE question IDs to ensure consistency
         question_ids = {}
         for i, (full_match, content) in enumerate(admonition_matches):
             question_ids[i] = str(uuid.uuid4())[:8]
-            print(f"Pre-generated question ID {i}: {question_ids[i]}")
+            logger.debug(f"Pre-generated question ID {i}: {question_ids[i]}")
         
         def replace_question(match_info, match_index):
             full_match, admonition_content = match_info
@@ -248,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {{
             
             # Use pre-generated question ID for consistency
             question_id = question_ids[match_index]
-            print(f"Processing question with ID: {question_id}")
+            logger.debug(f"Processing question with ID: {question_id}")
             
             # Remove the admonition title if present
             title_match = re.search(r'<p class="admonition-title"[^>]*>.*?</p>(.*)', admonition_content, re.DOTALL)
@@ -272,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function() {{
                     question_part = config['question'].split('---')[0].strip()
                     config['question'] = question_part
                 
-                print(f"Parsed config: {config}")
+                logger.debug(f"Parsed config: {config}")
                 
                 # Generate HTML and JavaScript with the SAME question_id
                 html = self._generate_question_html(config, question_id)
@@ -300,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {{
             'answer': ''
         }
         
-        print(f"DEBUG: Parsing content: {content[:200]}...")
+        logger.debug(f"Parsing content: {content[:200]}...")
         
         # Check for --- separator first (NEW FEATURE)
         # In HTML, --- becomes <hr> or <hr />
@@ -308,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {{
         has_separator = bool(re.search(hr_pattern, content)) or '---' in content
         
         if has_separator:
-            print("DEBUG: Found --- separator (or <hr>), splitting content")
+            logger.debug("Found --- separator (or <hr>), splitting content")
             
             # Split by <hr> tags if present, otherwise by ---
             if re.search(hr_pattern, content):
@@ -322,13 +358,13 @@ document.addEventListener('DOMContentLoaded', function() {{
                 
                 # Set the question content directly (preserves all rich content)
                 config['question'] = question_content
-                print(f"DEBUG: Question part length: {len(question_content)}")
-                print(f"DEBUG: Config part length: {len(config_content)}")
+                logger.debug(f"Question part length: {len(question_content)}")
+                logger.debug(f"Config part length: {len(config_content)}")
                 
                 # Parse configuration from config section only
                 self._parse_config_section(config_content, config)
             else:
-                print("DEBUG: Separator found but couldn't split content, falling back to legacy")
+                logger.debug("Separator found but couldn't split content, falling back to legacy")
                 # Fallback to legacy parsing
                 is_html = bool(re.search(r'<[^>]+>', content))
                 if is_html:
@@ -337,17 +373,17 @@ document.addEventListener('DOMContentLoaded', function() {{
                     self._parse_plain_text_content(content, config)
             
         else:
-            print("DEBUG: No --- separator found, using legacy parsing")
+            logger.debug("No --- separator found, using legacy parsing")
             # Legacy parsing: detect HTML vs plain text and parse accordingly
             is_html = bool(re.search(r'<[^>]+>', content))
-            print(f"DEBUG: Content type: {'HTML' if is_html else 'Plain text'}")
+            logger.debug(f"Content type: {'HTML' if is_html else 'Plain text'}")
             
             if is_html:
                 self._parse_html_content_legacy(content, config)
             else:
                 self._parse_plain_text_content(content, config)
         
-        print(f"DEBUG: Final config: {config}")
+        logger.debug(f"Final config: {config}")
         return config
 
     def _parse_config_section(self, config_content, config):
@@ -357,37 +393,58 @@ document.addEventListener('DOMContentLoaded', function() {{
         # Clean up the content - remove HTML tags
         clean_content = re.sub(r'<[^>]+>', '', config_content).strip()
         
-        print(f"DEBUG: Parsing config content: {clean_content}")
+        logger.debug(f"Parsing config content: {clean_content}")
+        
+        # Skip parsing if content is too long (likely not configuration)
+        if len(clean_content) > 200:
+            logger.debug("Content too long to be configuration, skipping")
+            return
         
         # Check if it looks like incorrect line-based config
         if '\n' in clean_content and ',' not in clean_content:
-            print(f"WARNING: Configuration appears to use line-based format instead of comma-separated format.")
-            print(f"WARNING: Expected format: 'marks: 10, type: long, rows: 5'")
-            print(f"WARNING: Please update your configuration to use comma-separated format.")
-            print(f"WARNING: Using default configuration values.")
-            # Don't try to parse - just use defaults
+            # Only warn if it contains config-like keywords
+            config_keywords = ['marks:', 'type:', 'rows:', 'placeholder:', 'answer:', 'question:', 'show_answer:']
+            if any(keyword in clean_content.lower() for keyword in config_keywords):
+                logger.warning(
+                    f"Invalid configuration format. "
+                    f"Expected comma-separated format: 'marks: 10, type: long, rows: 5'. "
+                    f"Found line-based format. Using default values."
+                )
             return
         
         # Parse using comma-separated format only
         config_dict = self._parse_comma_separated_config(clean_content)
         
-        print(f"DEBUG: Parsed config dictionary: {config_dict}")
+        logger.debug(f"Parsed config dictionary: {config_dict}")
         
         # Validate that we got a proper config dictionary
         if not isinstance(config_dict, dict):
-            print(f"WARNING: Configuration parsing failed for: '{clean_content}'")
-            print(f"WARNING: Please use comma-separated format: 'key1: value1, key2: value2'")
-            print(f"WARNING: Using default configuration values.")
+            logger.warning(
+                f"Configuration parsing failed for: '{clean_content}'. "
+                f"Please use comma-separated format: 'key1: value1, key2: value2'. "
+                f"Using default configuration values."
+            )
             return
         
+        # Only warn if we expected to find config but couldn't parse it
         if not config_dict and clean_content.strip():
-            print(f"WARNING: Failed to parse configuration: '{clean_content}'")
-            print(f"WARNING: Please use comma-separated format: 'key1: value1, key2: value2'")
-            print(f"WARNING: Using default configuration values.")
+            # Check if it looks like it was meant to be configuration
+            config_indicators = ['marks:', 'type:', 'rows:', ':', 'marks=', 'type=']
+            looks_like_config = any(indicator in clean_content.lower() for indicator in config_indicators)
+            
+            if looks_like_config:
+                logger.warning(
+                    f"Failed to parse configuration: '{clean_content}'. "
+                    f"Please use comma-separated format: 'key1: value1, key2: value2'. "
+                    f"Using default configuration values."
+                )
+            else:
+                logger.debug(f"Content doesn't appear to be configuration: {clean_content[:50]}...")
             return
         
         # Apply config values with type conversion and validation
-        self._apply_config_dictionary(config_dict, config)
+        if config_dict:
+            self._apply_config_dictionary(config_dict, config)
 
     def _parse_comma_separated_config(self, content):
         """Parse comma-separated config content into key:value dictionary."""
@@ -395,6 +452,17 @@ document.addEventListener('DOMContentLoaded', function() {{
             return {}
         
         config_dict = {}
+        
+        # First, check if this looks like actual configuration content
+        # Configuration should have at least one colon and common config keywords
+        config_keywords = ['marks', 'type', 'rows', 'placeholder', 'answer', 'question', 'show_answer', 'title', 'shuffle']
+        has_config_keyword = any(keyword in content.lower() for keyword in config_keywords)
+        has_colons = ':' in content
+        
+        # If it doesn't look like configuration, return empty dict
+        if not (has_config_keyword and has_colons):
+            logger.debug(f"Content doesn't appear to be configuration: {content[:50]}...")
+            return {}
         
         # Split by commas and parse each key:value pair
         items = [item.strip() for item in content.split(',')]
@@ -405,14 +473,17 @@ document.addEventListener('DOMContentLoaded', function() {{
                 key = key.strip()
                 value = value.strip()
                 
-                # Remove quotes if present
-                if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
-                    value = value[1:-1]
-                
-                config_dict[key] = value
-            elif item.strip():
-                # Item without colon - invalid format
-                print(f"WARNING: Invalid config item '{item}' - expected 'key: value' format")
+                # Only process if key looks like a valid config key
+                if key.lower() in config_keywords:
+                    # Remove quotes if present
+                    if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+                        value = value[1:-1]
+                    
+                    config_dict[key] = value
+                else:
+                    logger.debug(f"Skipping unknown config key '{key}' in item '{item}'")
+            elif item.strip() and len(item.strip()) < 50:  # Only warn for short items that might be intended as config
+                logger.debug(f"Skipping config item without colon: '{item}'")
         
         return config_dict
 
@@ -446,14 +517,20 @@ document.addEventListener('DOMContentLoaded', function() {{
                     
                     # Validate if needed
                     if key in valid_values and converted_value not in valid_values[key]:
-                        print(f"DEBUG: Invalid value for {key}: {converted_value}, using default")
+                        logger.warning(
+                            f"Invalid configuration value '{converted_value}' for '{key}'. "
+                            f"Expected {self._get_expected_type_hint(key)}. Using default value."
+                        )
                         continue
                     
                     config[key] = converted_value
-                    print(f"DEBUG: Applied config {key} = {converted_value}")
+                    logger.debug(f"Applied config {key} = {converted_value}")
                     
                 except (ValueError, TypeError) as e:
-                    print(f"DEBUG: Could not convert {key} value '{value}': {e}")
+                    logger.warning(
+                        f"Invalid configuration value '{value}' for '{key}'. "
+                        f"Expected {self._get_expected_type_hint(key)}. Using default value."
+                    )
                     # Apply defaults for failed conversions
                     if key == 'marks':
                         config[key] = self.config.get('default_marks', 0)
@@ -462,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {{
             else:
                 # Unknown config key - store as string
                 config[key] = value
-                print(f"DEBUG: Applied unknown config {key} = {value}")
+                logger.debug(f"Applied unknown config {key} = {value}")
 
     def _parse_html_content_legacy(self, content, config):
         """Legacy HTML parsing for backwards compatibility."""
@@ -473,7 +550,7 @@ document.addEventListener('DOMContentLoaded', function() {{
         comma_match = re.search(comma_config_pattern, content)
         if comma_match:
             config_text = comma_match.group(1).strip()
-            print(f"DEBUG: Found comma-separated config in HTML: {config_text}")
+            logger.debug(f"Found comma-separated config in HTML: {config_text}")
             
             # Use the same dictionary-based parsing as the new method
             self._parse_config_section(config_text, config)
@@ -509,12 +586,12 @@ document.addEventListener('DOMContentLoaded', function() {{
         remaining_content = content
         
         for config_key, pattern in config_patterns.items():
-            print(f"DEBUG: Testing pattern for {config_key}: {pattern}")
+            logger.debug(f"Testing pattern for {config_key}: {pattern}")
             
             match = re.search(pattern, remaining_content, re.DOTALL | re.IGNORECASE | re.MULTILINE)
             if match:
                 value = match.group(1).strip()
-                print(f"DEBUG: Found config: {config_key} = {value}")
+                logger.debug(f"Found config: {config_key} = {value}")
                 
                 # Parse the value based on type
                 if config_key == 'marks' or config_key == 'rows':
@@ -532,9 +609,9 @@ document.addEventListener('DOMContentLoaded', function() {{
                 
                 # Remove this config paragraph from remaining content
                 remaining_content = remaining_content.replace(match.group(0), '', 1)
-                print(f"DEBUG: Removed config paragraph '{match.group(0)}', remaining length: {len(remaining_content)}")
+                logger.debug(f"Removed config paragraph '{match.group(0)}', remaining length: {len(remaining_content)}")
             else:
-                print(f"DEBUG: No match found for {config_key}")
+                logger.debug(f"No match found for {config_key}")
         
         # Clean up any empty paragraphs and normalize whitespace
         remaining_content = re.sub(r'<p[^>]*>\s*</p>', '', remaining_content)
@@ -565,7 +642,7 @@ document.addEventListener('DOMContentLoaded', function() {{
                 value = value.strip()
                 
                 if key in config:
-                    print(f"DEBUG: Found config: {key} = {value}")
+                    logger.debug(f"Found config: {key} = {value}")
                     if key == 'show_answer':
                         config[key] = value.lower() in ['true', 'yes', '1']
                     elif key in ['marks', 'rows']:
@@ -604,7 +681,7 @@ document.addEventListener('DOMContentLoaded', function() {{
             if not section_content:
                 continue
             
-            print(f"DEBUG: Processing assessment section {idx}: {section_content[:100]}...")
+            logger.debug(f"Processing assessment section {idx}: {section_content[:100]}...")
                 
             # Parse this section using our existing HTML question parser
             config = self._parse_question_config(section_content)
@@ -615,20 +692,20 @@ document.addEventListener('DOMContentLoaded', function() {{
                 title_match = re.search(r'<p[^>]*>\s*title:\s*(.*?)\s*</p>', section_content, re.IGNORECASE)
                 if title_match:
                     assessment_config['title'] = title_match.group(1).strip()
-                    print(f"DEBUG: Found assessment title: {assessment_config['title']}")
+                    logger.debug(f"Found assessment title: {assessment_config['title']}")
                 
                 shuffle_match = re.search(r'<p[^>]*>\s*shuffle:\s*(true|false|yes|no)\s*</p>', section_content, re.IGNORECASE)
                 if shuffle_match:
                     assessment_config['shuffle'] = shuffle_match.group(1).lower() in ['true', 'yes', '1']
-                    print(f"DEBUG: Found assessment shuffle: {assessment_config['shuffle']}")
+                    logger.debug(f"Found assessment shuffle: {assessment_config['shuffle']}")
             
             # Only add questions that have actual question content
             if config['question'] and config['question'].strip():
                 questions.append(config)
-                print(f"DEBUG: Added question {len(questions)}: marks={config['marks']}")
+                logger.debug(f"Added question {len(questions)}: marks={config['marks']}")
         
-        print(f"DEBUG: Assessment total questions: {len(questions)}")
-        print(f"DEBUG: Assessment config: {assessment_config}")
+        logger.debug(f"Assessment total questions: {len(questions)}")
+        logger.debug(f"Assessment config: {assessment_config}")
         
         # Generate assessment HTML using the provided/generated assessment_id
         if questions:
@@ -1014,7 +1091,7 @@ document.addEventListener('DOMContentLoaded', function() {{
         question_js = self._generate_question_javascript(question_id, config)
         if hasattr(self, 'current_page_javascript'):
             self.current_page_javascript.append(question_js)
-            print(f"GENERATED JS for question {question_id}: Functions should include updateCharCount_{question_id}, submitAnswer_{question_id}")
+            logger.debug(f"Generated JavaScript for question {question_id}")
         
         return html
 
@@ -1113,7 +1190,7 @@ document.addEventListener('DOMContentLoaded', function() {{
         
         js_functions = []
         
-        print(f"Generating JavaScript for question_id: {question_id}")
+        logger.debug(f"Generating JavaScript for question_id: {question_id}")
         
         # Character count function (only if enabled)
         if show_character_count:
@@ -1125,7 +1202,7 @@ document.addEventListener('DOMContentLoaded', function() {{
     }}
 }}'''
             js_functions.append(char_count_func)
-            print(f"Added updateCharCount_{question_id}")
+            logger.debug(f"Added updateCharCount_{question_id}")
         
         # Auto-save functionality has been removed from the plugin
         
@@ -1161,7 +1238,7 @@ document.addEventListener('DOMContentLoaded', function() {{
     // Auto-save and answer persistence functionality has been removed from the plugin
 }}'''
         js_functions.append(submit_func)
-        print(f"Added submitAnswer_{question_id}")
+        logger.debug(f"Added submitAnswer_{question_id}")
         
         # Auto-save and answer persistence functionality has been removed from the plugin
         dom_ready_js = f'''// Initialize question {question_id} (persistence removed)
@@ -1173,7 +1250,7 @@ document.addEventListener('DOMContentLoaded', function() {{
             self.current_page_dom_ready.append(dom_ready_js)
         
         final_js = '\n\n'.join(js_functions)
-        print(f"Final JavaScript for {question_id} ({len(js_functions)} functions):\n{final_js[:200]}...")
+        logger.debug(f"Generated JavaScript for {question_id} with {len(js_functions)} functions")
         return final_js
 
     def _generate_assessment_javascript(self, assessment_id, questions):
@@ -1350,7 +1427,7 @@ document.addEventListener('DOMContentLoaded', function() {{
             else:
                 # Fallback: add at very beginning of document
                 output = js_block + output
-            print(f"Added consolidated JavaScript block with {len(js_data['functions'])} function groups and {len(js_data['dom_ready'])} DOM ready blocks")
+            logger.debug(f"Added consolidated JavaScript block with {len(js_data['functions'])} function groups and {len(js_data['dom_ready'])} DOM ready blocks")
         
         # Insert CSS if enabled
         if self.config.get('enable_css', True):

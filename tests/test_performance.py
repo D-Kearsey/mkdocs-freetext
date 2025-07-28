@@ -257,12 +257,18 @@ def test_memory_efficiency():
     large = results['large']
     
     # Processing time should scale reasonably
-    medium_time_ratio = medium['processing_time'] / small['processing_time']
-    large_time_ratio = large['processing_time'] / small['processing_time']
-    
-    # Should not be exponential growth
-    assert medium_time_ratio < 10, f"Medium processing time ratio should be reasonable: {medium_time_ratio:.2f}"
-    assert large_time_ratio < 20, f"Large processing time ratio should be reasonable: {large_time_ratio:.2f}"
+    # Handle case where small processing time is very small or zero
+    if small['processing_time'] > 0:
+        medium_time_ratio = medium['processing_time'] / small['processing_time']
+        large_time_ratio = large['processing_time'] / small['processing_time']
+        
+        # Should not be exponential growth
+        assert medium_time_ratio < 10, f"Medium processing time ratio should be reasonable: {medium_time_ratio:.2f}"
+        assert large_time_ratio < 20, f"Large processing time ratio should be reasonable: {large_time_ratio:.2f}"
+    else:
+        # If small processing time is effectively zero, just check that others are reasonable
+        assert medium['processing_time'] < 1.0, f"Medium processing time should be fast: {medium['processing_time']:.4f}s"
+        assert large['processing_time'] < 2.0, f"Large processing time should be reasonable: {large['processing_time']:.4f}s"
     
     # Output size should scale proportionally
     medium_size_ratio = medium['output_size'] / small['output_size']

@@ -14,6 +14,7 @@ mkdocs_freetext.egg-info/not-zip-safe
 mkdocs_freetext.egg-info/requires.txt
 mkdocs_freetext.egg-info/top_level.txt
 tests/__init__.py
+tests/run_tests.py
 tests/test_config.py
 tests/test_config_integration.py
 tests/test_config_processing.py
@@ -21,8 +22,10 @@ tests/test_content_processing.py
 tests/test_error_handling.py
 tests/test_function_definitions.py
 tests/test_html_generation.py
+tests/test_html_js_consistency.py
 tests/test_integration.py
 tests/test_javascript_integration.py
+tests/test_javascript_ordering.py
 tests/test_performance.py
 tests/test_plugin.py
 tests/test_separator.py

@@ -5,6 +5,40 @@ All notable changes to the MkDocs Free-Text Plugin will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-01-28
+
+### Major System Improvements
+- **Professional Logging System**: Completely replaced all print statements with a comprehensive logging system
+  - Added standard Python `logging` module with DEBUG, INFO, WARNING, and ERROR levels
+  - User-controllable debug output via `debug: true` configuration
+  - Configurable debug file output directory with `debug_output_dir` option
+  - Clean, quiet output by default with detailed debugging when needed
+- **Enhanced Configuration Validation**: Added early validation with meaningful error messages
+  - Type validation for all configuration options
+  - Helpful error messages with suggested fixes
+  - Configuration validation runs at plugin initialization
+- **Improved Error Handling**: Professional error reporting throughout the plugin
+  - Actionable warning messages with context
+  - Graceful fallback to default values when configuration errors occur
+  - Better file system error handling for debug output
+
+### Added
+- `debug_output_dir` configuration option for custom debug file location
+- `_validate_config()` method for early error detection
+- `_get_expected_type_hint()` helper for better error messages
+- Comprehensive logging categorization for all plugin operations
+
+### Enhanced
+- **Developer Experience**: Structured, searchable log messages replace random print statements
+- **User Experience**: Clean terminal output with optional detailed debugging
+- **Maintainability**: Consistent logging patterns throughout codebase
+
+### Technical Details
+- Replaced 20+ print statements with appropriate logging levels
+- Removed hardcoded debug directory paths
+- Added proper exception handling for file operations
+- Implemented professional Python logging standards
+
 ## [1.1.0] - 2025-01-27
 
 ### Major Improvements

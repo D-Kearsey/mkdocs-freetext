@@ -138,6 +138,25 @@ This plugin is designed to work seamlessly with the Material for MkDocs theme:
 | `enable_css` | boolean | `true` | Enable built-in CSS styling |
 | `shuffle_questions` | boolean | `false` | Shuffle question order in assessments |
 | `show_character_count` | boolean | `true` | Show character counter on text inputs |
+| `debug` | boolean | `false` | Enable detailed debug logging for troubleshooting |
+| `debug_output_dir` | string | `null` | Directory for debug file output (optional) |
+
+### 🔍 Debug Mode (v1.2.0+)
+
+Enable detailed logging for troubleshooting and development:
+
+```yaml
+plugins:
+  - freetext:
+      debug: true
+      debug_output_dir: "./debug"  # Optional: custom debug file location
+```
+
+**Debug features:**
+- ✅ **Professional Logging**: Clean, categorized log messages (DEBUG, INFO, WARNING, ERROR)
+- ✅ **Configurable Output**: Debug files only when needed, no hardcoded paths
+- ✅ **Clean Terminal**: Quiet operation by default, detailed output when enabled
+- ✅ **Better Error Messages**: Actionable warnings with suggested solutions
 
 ## 🌟 Examples
 
